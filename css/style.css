@@ -6,17 +6,17 @@
 
 :root{
   /* --- Warna Utama (silakan ganti hex di sini kalau mau ubah tema) --- */
-  --turquoise:      #12B7A8;
-  --turquoise-dark: #0C8F84;
-  --yellow:         #FFC93C;
-  --coral:          #FF6F59;
-  --purple:         #7C5CFC;
+  --turquoise:      #5FD9C4;
+  --turquoise-dark: #2FA894;
+  --yellow:         #FFD976;
+  --coral:          #FFA48C;
+  --purple:         #B4A8FF;
 
-  --bg:             #FAFDFC;
-  --bg-soft:        #EAFBF7;
-  --text:           #1F2937;
-  --text-soft:      #5B6B67;
-  --line:           #E1F3EF;
+  --bg:             #FCFEFD;
+  --bg-soft:        #EFFBF7;
+  --text:           #2A3B38;
+  --text-soft:      #6E7D79;
+  --line:           #E6F5F0;
   --white:          #FFFFFF;
 
   --radius-sm: 12px;
@@ -63,7 +63,8 @@ img{max-width:100%; display:block;}
 .btn-primary{
   background:linear-gradient(135deg, var(--coral), var(--yellow));
   color:var(--white);
-  box-shadow:0 8px 20px rgba(255,111,89,0.35);
+  box-shadow:0 8px 20px rgba(255,164,140,0.4);
+  color:#3A2A20;
 }
 .btn-outline{
   background:transparent;
