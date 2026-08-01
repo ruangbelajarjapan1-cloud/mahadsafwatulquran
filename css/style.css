@@ -138,6 +138,10 @@ img{max-width:100%; display:block;}
 .hero h1 span{color:var(--yellow);}
 .hero-desc{color:rgba(255,255,255,0.92); font-size:16px; max-width:600px; margin:0 auto 30px;}
 .hero-btns{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+.hero-brosur-link{
+  display:inline-block; margin-top:18px; font-size:12.5px; color:rgba(255,255,255,0.85);
+  text-decoration:underline; text-underline-offset:3px;
+}
 
 /* ================= STATS ================= */
 .stats{background:var(--white); padding:36px 24px; border-bottom:1px solid var(--line);}
@@ -246,6 +250,15 @@ img{max-width:100%; display:block;}
 }
 .testi-card p{font-size:14.5px; font-style:italic; margin-bottom:14px; color:var(--text);}
 .testi-name{font-size:13px; color:var(--sky-dark); font-weight:600;}
+
+/* ================= INSTAGRAM ================= */
+.ig-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; justify-items:center;}
+.ig-grid > blockquote{width:100% !important; min-width:0 !important;}
+.ig-fallback{
+  grid-column:1 / -1; text-align:center; background:var(--white);
+  border:1px solid var(--line); border-radius:var(--radius-md); padding:36px 24px;
+}
+.ig-fallback p{color:var(--text-soft); font-size:14px; margin-bottom:16px;}
 
 /* ================= ARTIKEL ================= */
 .article-card{
