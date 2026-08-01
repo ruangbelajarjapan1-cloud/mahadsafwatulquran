@@ -156,7 +156,7 @@ async function loadArtikelFromSheet() {
     const grid = document.getElementById('articleGrid');
     if (!grid) return; // halaman ini tidak punya grid artikel
     const data = await fetchSheet('Artikel');
-    if (!data.length) return; // sheet kosong -> biarkan statis
+    if (!data.length) { restoreStaticIfEmpty('articleGrid'); return; }
 
     grid.innerHTML = data.map(item => `
       <article class="article-card">
@@ -167,8 +167,7 @@ async function loadArtikelFromSheet() {
       </article>
     `).join('');
   } catch (err) {
-    // Gagal ambil data (SHEET_ID belum diisi / sheet privat) -> diamkan saja,
-    // konten statis di index.html tetap tampil seperti biasa.
+    restoreStaticIfEmpty('articleGrid');
   }
 }
 
@@ -177,7 +176,7 @@ async function loadGaleriFromSheet() {
     const grid = document.getElementById('galleryGrid');
     if (!grid) return; // halaman ini tidak punya grid galeri
     const data = await fetchSheet('Galeri');
-    if (!data.length) return;
+    if (!data.length) { restoreStaticIfEmpty('galleryGrid'); return; }
 
     const colorClasses = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6'];
     grid.innerHTML = data.map((item, i) => {
@@ -190,17 +189,30 @@ async function loadGaleriFromSheet() {
           <span>${item.Nama || ''}</span>
         </div>`;
     }).join('');
-
-    // pasang ulang event filter setelah konten baru masuk
-    document.querySelectorAll('#galleryGrid .gallery-item').forEach(el => {
-      // konten baru otomatis ikut ter-filter lewat data-category
-    });
   } catch (err) {
-    // Diamkan -> konten galeri statis tetap tampil
+    restoreStaticIfEmpty('galleryGrid');
   }
 }
 
+function showSkeleton(gridId, type, count) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  if (!grid.dataset.staticFallback) {
+    grid.dataset.staticFallback = 'true';
+    grid._staticHTML = grid.innerHTML; // simpan konten statis asli sebagai cadangan
+  }
+  const cls = type === 'gallery' ? 'skeleton-gallery' : 'skeleton-card';
+  grid.innerHTML = Array(count).fill(`<div class="skeleton ${cls}"></div>`).join('');
+}
+
+function restoreStaticIfEmpty(gridId) {
+  const grid = document.getElementById(gridId);
+  if (grid && grid._staticHTML) grid.innerHTML = grid._staticHTML;
+}
+
 if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
+  showSkeleton('articleGrid', 'card', 3);
+  showSkeleton('galleryGrid', 'gallery', 6);
   loadArtikelFromSheet();
   loadGaleriFromSheet();
 }
@@ -266,6 +278,17 @@ let KEGIATAN_EVENTS = {
 
 let calendarDate = new Date();
 
+function getHijriInfo(date) {
+  try {
+    const fmt = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
+    const parts = fmt.formatToParts(date);
+    const get = (t) => (parts.find(p => p.type === t) || {}).value || '';
+    return { day: get('day'), month: get('month'), year: get('year') };
+  } catch (err) {
+    return null;
+  }
+}
+
 function renderCalendar() {
   const grid = document.getElementById('calendarGrid');
   const label = document.getElementById('calendarLabel');
@@ -275,9 +298,13 @@ function renderCalendar() {
   const year = calendarDate.getFullYear();
   const month = calendarDate.getMonth();
   const monthNames = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-  label.textContent = `${monthNames[month]} ${year}`;
 
-  const firstDay = new Date(year, month, 1).getDay(); // 0 = Minggu
+  const hijriMid = getHijriInfo(new Date(year, month, 15));
+  label.innerHTML = hijriMid
+    ? `${monthNames[month]} ${year} <span class="cal-hijri-label">≈ ${hijriMid.month} ${hijriMid.year} H</span>`
+    : `${monthNames[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay(); // 0 = Ahad
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   let html = '';
@@ -287,7 +314,9 @@ function renderCalendar() {
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
     const hasEvent = KEGIATAN_EVENTS[dateStr] ? 'has-event' : '';
-    html += `<div class="cal-day ${hasEvent}" data-date="${dateStr}">${d}</div>`;
+    const h = getHijriInfo(new Date(year, month, d));
+    const hijriSub = h ? `<span class="hijri">${h.day}</span>` : '';
+    html += `<div class="cal-day ${hasEvent}" data-date="${dateStr}">${d}${hijriSub}</div>`;
   }
   grid.innerHTML = html;
 
