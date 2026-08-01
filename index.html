@@ -40,6 +40,17 @@
   </div>
 </header>
 
+<!-- ================= BANNER URGENSI ================= -->
+<div class="urgency-banner">
+  <div class="container urgency-inner">
+    <span id="countdownText">⏳ Memuat info gelombang pendaftaran...</span>
+    <div class="kuota-wrap">
+      <div class="kuota-track"><div class="kuota-fill" id="kuotaBar"></div></div>
+      <span class="kuota-label" id="kuotaLabel"></span>
+    </div>
+  </div>
+</div>
+
 <!-- ================= HERO ================= -->
 <section class="hero" id="beranda">
   <div class="hero-shapes" aria-hidden="true">
@@ -106,21 +117,25 @@
         <div class="card-icon">✦</div>
         <h3>Tahfidz Qur'an</h3>
         <p>Target hafalan bertahap dengan metode talaqqi dan muraja'ah harian bersama pembimbing.</p>
+        <a href="program-tahfidz.html" class="program-link">Pelajari selengkapnya →</a>
       </div>
       <div class="card card-color c-coral">
         <div class="card-icon">✦</div>
         <h3>Diniyah</h3>
         <p>Tauhid, fiqih, dan akhlak dasar sesuai pemahaman salafussholeh, disampaikan secara bertahap.</p>
+        <a href="program-diniyah.html" class="program-link">Pelajari selengkapnya →</a>
       </div>
       <div class="card card-color c-purple">
         <div class="card-icon">✦</div>
         <h3>Bahasa Arab</h3>
         <p>Pembiasaan muhadatsah harian agar santri terbiasa memahami bahasa Al-Qur'an.</p>
+        <a href="program-bahasa-arab.html" class="program-link">Pelajari selengkapnya →</a>
       </div>
       <div class="card card-color c-yellow">
         <div class="card-icon">✦</div>
         <h3>Ekstrakurikuler</h3>
         <p>Olahraga, kepanduan, dan keterampilan hidup untuk menyeimbangkan fisik dan jiwa.</p>
+        <a href="program-ekstrakurikuler.html" class="program-link">Pelajari selengkapnya →</a>
       </div>
     </div>
   </div>
@@ -168,6 +183,20 @@
       <div class="schedule-item"><span class="time">20.00</span><span class="desc">Belajar malam &amp; istirahat</span></div>
     </div>
     <p class="note-small center">Jadwal dapat menyesuaikan kalender akademik &amp; agenda tahunan ma'had.</p>
+
+    <h3 class="sub-heading" style="margin-top:50px">📅 Kalender Agenda Tahunan</h3>
+    <div class="calendar-wrap">
+      <div class="calendar-header">
+        <button type="button" id="calPrev" class="cal-nav" aria-label="Bulan sebelumnya">‹</button>
+        <span id="calendarLabel">—</span>
+        <button type="button" id="calNext" class="cal-nav" aria-label="Bulan berikutnya">›</button>
+      </div>
+      <div class="calendar-weekdays">
+        <span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+      <div class="calendar-events" id="calendarEvents"></div>
+    </div>
   </div>
 </section>
 
@@ -317,6 +346,11 @@
 
       <label class="full">Alamat Domisili
         <textarea name="alamat" rows="3" required placeholder="Alamat lengkap, kecamatan, kabupaten"></textarea>
+      </label>
+
+      <label class="full checkbox-row">
+        <input type="checkbox" name="optin_wa" value="Ya">
+        <span>Saya ingin mendapat info kegiatan &amp; artikel terbaru via WhatsApp broadcast</span>
       </label>
 
       <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">Kirim Pendaftaran</button>
