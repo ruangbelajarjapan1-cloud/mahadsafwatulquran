@@ -109,12 +109,23 @@ img{max-width:100%; display:block;}
   padding:100px 24px 90px;
   overflow:hidden;
 }
+.bismillah{
+  font-family:'Amiri', serif; font-size:22px; color:rgba(255,255,255,0.85);
+  margin-bottom:18px; letter-spacing:0.02em;
+}
 .hero-shapes{position:absolute; inset:0; pointer-events:none;}
-.hero-shapes .shape{position:absolute; fill:rgba(255,255,255,0.14);}
-.shape-1{width:70px; top:12%; left:8%;}
-.shape-2{width:50px; top:65%; left:15%; fill:var(--yellow); opacity:.5;}
-.shape-3{width:90px; top:20%; right:10%; fill:var(--coral); opacity:.35;}
-.shape-4{width:45px; bottom:12%; right:20%;}
+.hero-shapes .shape{position:absolute; fill:rgba(255,255,255,0.14); animation:floaty 7s ease-in-out infinite;}
+.shape-1{width:70px; top:12%; left:8%; animation-delay:0s;}
+.shape-2{width:50px; top:65%; left:15%; fill:var(--yellow); opacity:.5; animation-delay:1.2s;}
+.shape-3{width:90px; top:20%; right:10%; fill:var(--coral); opacity:.35; animation-delay:2.4s;}
+.shape-4{width:45px; bottom:12%; right:20%; animation-delay:3.6s;}
+@keyframes floaty{
+  0%, 100%{ transform:translateY(0) rotate(0deg); }
+  50%{ transform:translateY(-14px) rotate(6deg); }
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-shapes .shape{animation:none;}
+}
 
 .hero-inner{position:relative; z-index:1; max-width:760px; text-align:center; margin:0 auto;}
 .eyebrow{
@@ -312,6 +323,20 @@ img{max-width:100%; display:block;}
   padding:18px 0; font-size:12.5px; color:rgba(255,255,255,0.5);
 }
 
+/* ================= LOADING SKELETON ================= */
+@keyframes shimmer{
+  0%{background-position:-200px 0;}
+  100%{background-position:200px 0;}
+}
+.skeleton{
+  background:linear-gradient(90deg, var(--bg-soft) 25%, var(--line) 37%, var(--bg-soft) 63%);
+  background-size:400px 100%;
+  animation:shimmer 1.4s ease infinite;
+  border-radius:var(--radius-md);
+}
+.skeleton-card{height:180px;}
+.skeleton-gallery{aspect-ratio:4/3;}
+
 /* ================= SCROLL REVEAL ================= */
 .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease;}
 .reveal.in-view{opacity:1; transform:translateY(0);}
@@ -354,10 +379,12 @@ img{max-width:100%; display:block;}
 .calendar-header{
   display:flex; align-items:center; justify-content:space-between;
   font-family:'Baloo 2'; font-weight:700; font-size:15px; margin-bottom:14px; color:var(--sky-dark);
+  text-align:center; line-height:1.5;
 }
+.cal-hijri-label{display:block; font-family:'Poppins'; font-weight:500; font-size:11px; color:var(--text-soft);}
 .cal-nav{
   background:var(--bg-soft); border:none; width:32px; height:32px; border-radius:50%;
-  font-size:18px; cursor:pointer; color:var(--sky-dark);
+  font-size:18px; cursor:pointer; color:var(--sky-dark); flex-shrink:0;
 }
 .calendar-weekdays{
   display:grid; grid-template-columns:repeat(7,1fr); text-align:center;
@@ -365,16 +392,18 @@ img{max-width:100%; display:block;}
 }
 .calendar-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
 .cal-day{
-  aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+  aspect-ratio:1/1; display:flex; flex-direction:column; align-items:center; justify-content:center;
   font-size:12.5px; border-radius:8px; color:var(--text);
 }
+.cal-day .hijri{font-size:8.5px; color:var(--text-soft); font-weight:400; margin-top:1px;}
 .cal-day.has-event{
   background:var(--bg-soft); font-weight:700; color:var(--sky-dark); cursor:pointer; position:relative;
 }
 .cal-day.has-event::after{
-  content:""; position:absolute; bottom:4px; width:4px; height:4px; border-radius:50%; background:var(--coral);
+  content:""; position:absolute; bottom:2px; width:4px; height:4px; border-radius:50%; background:var(--coral);
 }
 .cal-day.selected{background:var(--sky); color:var(--white);}
+.cal-day.selected .hijri{color:rgba(255,255,255,0.85);}
 .cal-day.selected::after{background:var(--white);}
 .calendar-events{
   margin-top:16px; padding-top:14px; border-top:1px solid var(--line);
@@ -452,6 +481,7 @@ img{max-width:100%; display:block;}
   .hamburger{display:flex;}
 
   .hero{padding:70px 20px 60px;}
+  .bismillah{font-size:18px;}
   .hero h1{font-size:30px;}
   .hero-desc{font-size:14.5px;}
 
