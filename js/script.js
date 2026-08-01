@@ -6,21 +6,24 @@
 const hamburgerBtn = document.getElementById('hamburgerBtn');
 const navLinks = document.getElementById('navLinks');
 
-hamburgerBtn.addEventListener('click', () => {
-  const isOpen = navLinks.classList.toggle('open');
-  hamburgerBtn.setAttribute('aria-expanded', isOpen);
-});
-
-// Tutup menu otomatis saat salah satu link diklik (khusus mobile)
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    hamburgerBtn.setAttribute('aria-expanded', false);
+if (hamburgerBtn && navLinks) {
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
   });
-});
+
+  // Tutup menu otomatis saat salah satu link diklik (khusus mobile)
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', false);
+    });
+  });
+}
 
 /* ---------- 2. Tahun otomatis di footer ---------- */
-document.getElementById('year').textContent = new Date().getFullYear();
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 /* ---------- 3. Animasi angka statistik ---------- */
 const statNums = document.querySelectorAll('.stat-item .num');
@@ -68,36 +71,38 @@ const formDaftar = document.getElementById('formDaftar');
 const formStatus = document.getElementById('formStatus');
 const btnSubmit = document.getElementById('btnSubmit');
 
-formDaftar.addEventListener('submit', function (e) {
-  e.preventDefault();
+if (formDaftar) {
+  formDaftar.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-  if (SCRIPT_URL.includes("PASTE_URL_GOOGLE_APPS_SCRIPT_DI_SINI")) {
-    showStatus('error', 'Backend belum terhubung. Admin: silakan ikuti panduan di README.md untuk menghubungkan Google Sheet.');
-    return;
-  }
+    if (SCRIPT_URL.includes("PASTE_URL_GOOGLE_APPS_SCRIPT_DI_SINI")) {
+      showStatus('error', 'Backend belum terhubung. Admin: silakan ikuti panduan di README.md untuk menghubungkan Google Sheet.');
+      return;
+    }
 
-  const formData = new FormData(formDaftar);
-  btnSubmit.disabled = true;
-  btnSubmit.textContent = 'Mengirim...';
+    const formData = new FormData(formDaftar);
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = 'Mengirim...';
 
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    body: formData
-  })
-    .then(() => {
-      // Google Apps Script Web App tidak selalu mengizinkan pembacaan
-      // response (CORS), jadi kita anggap sukses jika tidak ada error jaringan.
-      showStatus('success', 'Alhamdulillah, pendaftaran terkirim! Admin kami akan menghubungi Anda via WhatsApp.');
-      formDaftar.reset();
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: formData
     })
-    .catch(() => {
-      showStatus('error', 'Maaf, terjadi kendala saat mengirim data. Coba lagi atau hubungi admin via WhatsApp.');
-    })
-    .finally(() => {
-      btnSubmit.disabled = false;
-      btnSubmit.textContent = 'Kirim Pendaftaran';
-    });
-});
+      .then(() => {
+        // Google Apps Script Web App tidak selalu mengizinkan pembacaan
+        // response (CORS), jadi kita anggap sukses jika tidak ada error jaringan.
+        showStatus('success', 'Alhamdulillah, pendaftaran terkirim! Admin kami akan menghubungi Anda via WhatsApp.');
+        formDaftar.reset();
+      })
+      .catch(() => {
+        showStatus('error', 'Maaf, terjadi kendala saat mengirim data. Coba lagi atau hubungi admin via WhatsApp.');
+      })
+      .finally(() => {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Kirim Pendaftaran';
+      });
+  });
+}
 
 /* ---------- 5. Filter Galeri ---------- */
 const filterBtns = document.querySelectorAll('.filter-btn');
@@ -131,7 +136,7 @@ filterBtns.forEach(btn => {
    Kalau dibiarkan kosong, website tetap jalan normal
    memakai konten statis yang sudah ada di index.html.
 */
-const SHEET_ID = "https://docs.google.com/spreadsheets/d/1v2jMro90-PH40YLaDAklNztoQG2tGO8xueuzba2V2X4/edit?usp=sharing";
+const SHEET_ID = "1v2jMro90-PH40YLaDAklNztoQG2tGO8xueuzba2V2X4";
 
 async function fetchSheet(sheetName) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
@@ -148,8 +153,9 @@ async function fetchSheet(sheetName) {
 
 async function loadArtikelFromSheet() {
   try {
-    const data = await fetchSheet('Artikel');
     const grid = document.getElementById('articleGrid');
+    if (!grid) return; // halaman ini tidak punya grid artikel
+    const data = await fetchSheet('Artikel');
     if (!data.length) return; // sheet kosong -> biarkan statis
 
     grid.innerHTML = data.map(item => `
@@ -168,8 +174,9 @@ async function loadArtikelFromSheet() {
 
 async function loadGaleriFromSheet() {
   try {
-    const data = await fetchSheet('Galeri');
     const grid = document.getElementById('galleryGrid');
+    if (!grid) return; // halaman ini tidak punya grid galeri
+    const data = await fetchSheet('Galeri');
     if (!data.length) return;
 
     const colorClasses = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6'];
@@ -196,6 +203,197 @@ async function loadGaleriFromSheet() {
 if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
   loadArtikelFromSheet();
   loadGaleriFromSheet();
+}
+
+
+/* ============================================
+   7. BANNER COUNTDOWN PENDAFTARAN
+   ============================================
+   Datanya diambil otomatis dari tab "Pengaturan" di Google Sheet.
+   Nilai di bawah ini HANYA dipakai sebagai cadangan kalau sheet
+   belum diisi / gagal dimuat — admin tidak perlu mengubah ini.
+*/
+let PENDAFTARAN_DEADLINE = "2026-09-30";
+
+function renderCountdown() {
+  const el = document.getElementById('countdownText');
+  if (!el) return;
+
+  const deadline = new Date(PENDAFTARAN_DEADLINE + "T23:59:59");
+  const now = new Date();
+  const diffMs = deadline - now;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays > 0) {
+    el.textContent = `⏳ Gelombang pendaftaran ditutup dalam ${diffDays} hari lagi — daftarkan putra-putri Anda sekarang!`;
+  } else {
+    el.textContent = `Pendaftaran gelombang ini sudah ditutup. Hubungi admin untuk info gelombang berikutnya.`;
+  }
+}
+renderCountdown();
+
+
+/* ============================================
+   8. PROGRESS KUOTA PENDAFTARAN
+   ============================================
+   Sama seperti di atas — datanya dari tab "Pengaturan" di Sheet.
+*/
+let KUOTA_TERISI = 62;
+let KUOTA_TOTAL = 100;
+
+function renderKuota() {
+  const bar = document.getElementById('kuotaBar');
+  const label = document.getElementById('kuotaLabel');
+  if (!bar || !label) return;
+
+  const percent = Math.min(100, Math.round((KUOTA_TERISI / KUOTA_TOTAL) * 100));
+  bar.style.width = percent + '%';
+  label.textContent = `${KUOTA_TERISI} dari ${KUOTA_TOTAL} kuota santri baru sudah terisi`;
+}
+renderKuota();
+
+
+/* ============================================
+   9. KALENDER KEGIATAN INTERAKTIF
+   ============================================
+   Datanya diambil otomatis dari tab "Kalender" di Google Sheet.
+   Isi di bawah ini hanya contoh cadangan.
+*/
+let KEGIATAN_EVENTS = {
+  "2026-08-17": ["Upacara &amp; lomba HUT RI"],
+  "2026-08-24": ["Ujian tengah semester tahfidz"]
+};
+
+let calendarDate = new Date();
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const label = document.getElementById('calendarLabel');
+  const eventPanel = document.getElementById('calendarEvents');
+  if (!grid || !label) return;
+
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+  const monthNames = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  label.textContent = `${monthNames[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay(); // 0 = Minggu
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = '';
+  for (let i = 0; i < firstDay; i++) {
+    html += `<div class="cal-day cal-empty"></div>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const hasEvent = KEGIATAN_EVENTS[dateStr] ? 'has-event' : '';
+    html += `<div class="cal-day ${hasEvent}" data-date="${dateStr}">${d}</div>`;
+  }
+  grid.innerHTML = html;
+
+  grid.querySelectorAll('.cal-day.has-event').forEach(el => {
+    el.addEventListener('click', () => {
+      grid.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+      el.classList.add('selected');
+      const events = KEGIATAN_EVENTS[el.dataset.date] || [];
+      eventPanel.innerHTML = events.map(e => `<div class="cal-event-item">📌 ${e}</div>`).join('');
+    });
+  });
+
+  if (eventPanel) eventPanel.innerHTML = `<p class="note-small" style="margin:0">Klik tanggal bertanda titik untuk lihat agenda.</p>`;
+}
+
+const calPrev = document.getElementById('calPrev');
+const calNext = document.getElementById('calNext');
+if (calPrev && calNext) {
+  calPrev.addEventListener('click', () => {
+    calendarDate.setMonth(calendarDate.getMonth() - 1);
+    renderCalendar();
+  });
+  calNext.addEventListener('click', () => {
+    calendarDate.setMonth(calendarDate.getMonth() + 1);
+    renderCalendar();
+  });
+  renderCalendar();
+}
+
+
+/* ============================================
+   10. AMBIL PENGATURAN & KALENDER DARI GOOGLE SHEET
+   ============================================
+   Tab "Pengaturan" format: kolom Key | Value, contoh isi:
+     PENDAFTARAN_DEADLINE | 2026-09-30
+     KUOTA_TERISI          | 62
+     KUOTA_TOTAL            | 100
+
+   Tab "Kalender" format: kolom Tanggal | Judul
+     (boleh beberapa baris dengan tanggal sama)
+
+   Kalau kedua tab ini belum dibuat di Sheet, fitur akan diam saja
+   dan memakai nilai cadangan di atas — website tetap aman berjalan.
+*/
+function parseGvizValue(raw) {
+  if (raw && typeof raw === 'string' && raw.startsWith('Date(')) {
+    // gviz mengirim tanggal dalam format Date(tahun,bulanIndex,tanggal)
+    const parts = raw.replace('Date(', '').replace(')', '').split(',').map(Number);
+    const d = new Date(parts[0], parts[1], parts[2]);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+  return raw;
+}
+
+async function loadPengaturanFromSheet() {
+  try {
+    const data = await fetchSheet('Pengaturan');
+    if (!data.length) return;
+
+    data.forEach(row => {
+      const key = (row.Key || '').toString().trim();
+      const value = parseGvizValue(row.Value);
+      if (key === 'PENDAFTARAN_DEADLINE' && value) {
+        PENDAFTARAN_DEADLINE = String(value).slice(0, 10);
+      }
+      if (key === 'KUOTA_TERISI' && value !== '') {
+        KUOTA_TERISI = Number(value);
+      }
+      if (key === 'KUOTA_TOTAL' && value !== '') {
+        KUOTA_TOTAL = Number(value);
+      }
+    });
+
+    renderCountdown();
+    renderKuota();
+  } catch (err) {
+    // Tab "Pengaturan" belum ada / gagal dimuat -> pakai nilai cadangan
+  }
+}
+
+async function loadKalenderFromSheet() {
+  try {
+    const data = await fetchSheet('Kalender');
+    if (!data.length) return;
+
+    const events = {};
+    data.forEach(row => {
+      const tanggal = parseGvizValue(row.Tanggal);
+      const judul = row.Judul;
+      if (!tanggal || !judul) return;
+      if (!events[tanggal]) events[tanggal] = [];
+      events[tanggal].push(judul);
+    });
+
+    if (Object.keys(events).length) {
+      KEGIATAN_EVENTS = events;
+      renderCalendar();
+    }
+  } catch (err) {
+    // Tab "Kalender" belum ada / gagal dimuat -> pakai nilai cadangan
+  }
+}
+
+if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
+  loadPengaturanFromSheet();
+  loadKalenderFromSheet();
 }
 
 function showStatus(type, message) {
