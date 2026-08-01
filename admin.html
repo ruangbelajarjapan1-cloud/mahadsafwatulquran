@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin — Ma'had Safwatul Qur'an</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .admin-wrap{max-width:720px; margin:0 auto; padding:50px 24px 90px;}
+  .admin-header{text-align:center; margin-bottom:36px;}
+  .admin-group{margin-bottom:34px;}
+  .admin-group h3{font-size:15px; color:var(--sky-dark); margin-bottom:14px;}
+  .admin-link{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:16px 18px; margin-bottom:10px; transition:.15s ease;
+  }
+  .admin-link:hover{border-color:var(--sky); transform:translateY(-1px);}
+  .admin-link .txt strong{display:block; font-size:14px; font-family:'Baloo 2'; color:var(--text);}
+  .admin-link .txt span{font-size:12px; color:var(--text-soft);}
+  .admin-link .arrow{color:var(--sky-dark); font-size:18px;}
+  .admin-note{
+    background:var(--bg-soft); border-radius:var(--radius-sm); padding:16px 18px;
+    font-size:13px; color:var(--text-soft); margin-top:10px;
+  }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="brand">
+      <svg class="brand-star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,1 15,9 23,9 16.5,13.5 19,22 12,17 5,22 7.5,13.5 1,9 9,9"/></svg>
+      Safwatul Qur'an — Admin
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">← Kembali ke Website</a>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="admin-wrap">
+  <div class="admin-header">
+    <p class="eyebrow center">✦ Khusus Pengelola</p>
+    <h2 class="center">Panel Admin</h2>
+    <p class="section-desc center" style="margin:10px auto 0">Halaman ini untuk memudahkan admin ma'had — bukan untuk pengunjung umum. Simpan link halaman ini (tidak muncul di menu utama website).</p>
+  </div>
+
+  <div class="admin-group">
+    <h3>📊 Kelola Konten Website</h3>
+    <a class="admin-link" href="https://docs.google.com/spreadsheets/d/1v2jMro90-PH40YLaDAklNztoQG2tGO8xueuzba2V2X4/edit" target="_blank" rel="noopener">
+      <div class="txt"><strong>Buka Spreadsheet Konten</strong><span>Isi tab Artikel, Galeri, Pengaturan (countdown/kuota), &amp; Kalender</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <div class="admin-note">
+      💡 Cukup edit di sini, website otomatis update — tidak perlu sentuh kode apapun.<br>
+      Tab yang tersedia: <strong>Artikel</strong>, <strong>Galeri</strong>, <strong>Pengaturan</strong>, <strong>Kalender</strong>.
+      Format tiap tab ada di README.md bagian panduan.
+    </div>
+  </div>
+
+  <div class="admin-group">
+    <h3>📝 Kelola Pendaftaran Santri</h3>
+    <a class="admin-link" href="#" target="_blank" rel="noopener" onclick="alert('Ganti link ini dengan URL Spreadsheet Pendaftaran Anda. Buka Apps Script → lihat nama project → cari file Spreadsheet dengan nama yang sama di Google Drive Anda.'); return false;">
+      <div class="txt"><strong>Buka Spreadsheet Pendaftaran</strong><span>⚠️ Ganti href di kode dengan link spreadsheet pendaftaran asli Anda</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="admin-link" href="https://script.google.com/home" target="_blank" rel="noopener">
+      <div class="txt"><strong>Buka Apps Script Editor</strong><span>Untuk keperluan teknis lanjutan (jarang dibutuhkan)</span></div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <div class="admin-group">
+    <h3>💬 Kontak Cepat</h3>
+    <a class="admin-link" href="https://wa.me/6281234567890" target="_blank" rel="noopener">
+      <div class="txt"><strong>WhatsApp Admin</strong><span>Nomor yang tampil di website</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="admin-link" href="https://instagram.com/shafwatulquran" target="_blank" rel="noopener">
+      <div class="txt"><strong>Instagram Ma'had</strong><span>@shafwatulquran</span></div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <div class="admin-group">
+    <h3>🔧 Kelola Tampilan Website</h3>
+    <a class="admin-link" href="https://github.com/ruangbelajarjapan1-cloud/mahadsafwatulquran" target="_blank" rel="noopener">
+      <div class="txt"><strong>Buka Repo GitHub</strong><span>Untuk ganti foto, teks, atau upload ulang file website</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="admin-link" href="README.md" target="_blank" rel="noopener">
+      <div class="txt"><strong>Baca README.md</strong><span>Panduan lengkap step-by-step</span></div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
