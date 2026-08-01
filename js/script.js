@@ -396,6 +396,30 @@ if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
   loadKalenderFromSheet();
 }
 
+
+/* ============================================
+   11. SCROLL REVEAL (efek muncul halus saat discroll)
+   ============================================
+   Progressive enhancement: kalau browser tidak mendukung
+   IntersectionObserver, section akan tetap tampil normal
+   (tidak disembunyikan sama sekali) — jadi aman.
+*/
+if ('IntersectionObserver' in window) {
+  const revealTargets = document.querySelectorAll('.section, .stats');
+  revealTargets.forEach(el => el.classList.add('reveal'));
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealTargets.forEach(el => revealObserver.observe(el));
+}
+
 function showStatus(type, message) {
   formStatus.textContent = message;
   formStatus.className = 'form-status show ' + type;
