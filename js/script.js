@@ -210,7 +210,33 @@ function restoreStaticIfEmpty(gridId) {
   if (grid && grid._staticHTML) grid.innerHTML = grid._staticHTML;
 }
 
+async function loadInstagramFromSheet() {
+  try {
+    const grid = document.getElementById('igGrid');
+    if (!grid) return;
+    const data = await fetchSheet('Instagram');
+    if (!data.length) return; // sheet kosong -> biarkan fallback statis (tombol ke profil IG)
+
+    grid.innerHTML = data.slice(0, 6).map(item => `
+      <blockquote class="instagram-media" data-instgrm-permalink="${item.URL}" data-instgrm-version="14" style="margin:0;"></blockquote>
+    `).join('');
+
+    if (window.instgrm) {
+      window.instgrm.Embeds.process();
+    } else {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.instagram.com/embed.js';
+      script.onload = () => { if (window.instgrm) window.instgrm.Embeds.process(); };
+      document.body.appendChild(script);
+    }
+  } catch (err) {
+    // Tab "Instagram" belum ada / gagal dimuat -> fallback statis tetap tampil
+  }
+}
+
 if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
+  loadInstagramFromSheet();
   showSkeleton('articleGrid', 'card', 3);
   showSkeleton('galleryGrid', 'gallery', 6);
   loadArtikelFromSheet();
