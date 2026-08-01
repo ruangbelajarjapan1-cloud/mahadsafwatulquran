@@ -178,13 +178,20 @@
     <h2 class="center">Suasana Belajar di Ma'had</h2>
     <p class="section-desc center">Sekilas lingkungan dan fasilitas — akan diperbarui dengan foto asli ma'had.</p>
 
-    <div class="gallery-grid">
-      <div class="gallery-item g1"><span>Gedung Kelas</span></div>
-      <div class="gallery-item g2"><span>Ruang Tahfidz</span></div>
-      <div class="gallery-item g3"><span>Asrama Santri</span></div>
-      <div class="gallery-item g4"><span>Aula Utama</span></div>
-      <div class="gallery-item g5"><span>Lapangan</span></div>
-      <div class="gallery-item g6"><span>Perpustakaan</span></div>
+    <div class="gallery-filter" id="galleryFilter">
+      <button class="filter-btn active" data-filter="Semua">Semua</button>
+      <button class="filter-btn" data-filter="Gedung">Gedung</button>
+      <button class="filter-btn" data-filter="Kegiatan">Kegiatan</button>
+      <button class="filter-btn" data-filter="Asrama">Asrama</button>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-item g1" data-category="Gedung"><span>Gedung Kelas</span></div>
+      <div class="gallery-item g2" data-category="Kegiatan"><span>Ruang Tahfidz</span></div>
+      <div class="gallery-item g3" data-category="Asrama"><span>Asrama Santri</span></div>
+      <div class="gallery-item g4" data-category="Gedung"><span>Aula Utama</span></div>
+      <div class="gallery-item g5" data-category="Kegiatan"><span>Lapangan</span></div>
+      <div class="gallery-item g6" data-category="Gedung"><span>Perpustakaan</span></div>
     </div>
     <p class="note-small center">💡 Ganti kelas <code>gallery-item</code> di atas dengan tag <code>&lt;img&gt;</code> berisi foto asli lingkungan/fasilitas (tanpa foto wajah) saat sudah tersedia.</p>
   </div>
@@ -238,7 +245,7 @@
     <p class="eyebrow center">✦ Artikel &amp; Kabar</p>
     <h2 class="center">Dakwah &amp; Kabar Ma'had</h2>
 
-    <div class="grid-3 article-grid">
+    <div class="grid-3 article-grid" id="articleGrid">
       <article class="article-card">
         <span class="article-tag">Parenting Qurani</span>
         <h4>5 Cara Menumbuhkan Cinta Al-Qur'an pada Anak</h4>
@@ -344,6 +351,37 @@
   </div>
 </section>
 
+<!-- ================= FAQ ================= -->
+<section class="section section-soft">
+  <div class="container">
+    <p class="eyebrow center">✦ Tanya Jawab</p>
+    <h2 class="center">Pertanyaan yang Sering Ditanyakan</h2>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Berapa biaya pendaftaran &amp; SPP bulanan?</summary>
+        <p>Silakan hubungi admin via WhatsApp untuk info rincian biaya terbaru, karena dapat berubah tiap tahun ajaran.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apakah orang tua boleh berkunjung / menjenguk santri?</summary>
+        <p>Boleh, ma'had menyediakan jadwal kunjungan rutin. Jadwal lengkap dapat ditanyakan ke admin.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Usia berapa minimal santri bisa mendaftar?</summary>
+        <p>Pendaftaran dibuka untuk jenjang MI/SD, MTs/SMP, dan MA/SMA. Syarat usia mengikuti ketentuan jenjang masing-masing.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Bagaimana cara memantau perkembangan hafalan anak?</summary>
+        <p>Wali santri akan mendapat laporan perkembangan hafalan &amp; akademik secara berkala dari pembina.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apakah tersedia beasiswa untuk santri kurang mampu?</summary>
+        <p>Tersedia melalui program donasi ma'had. Silakan hubungi admin untuk info pendaftaran beasiswa.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
 <!-- ================= KONTAK ================= -->
 <section class="section" id="kontak">
   <div class="container">
@@ -410,13 +448,18 @@
     <div class="footer-col">
       <h5>Ikuti Kami</h5>
       <a href="https://instagram.com/shafwatulquran" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://wa.me/628978842802" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://wa.me/6281234567890" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
   <div class="footer-bottom">
     <p>&copy; <span id="year"></span> Ma'had Safwatul Qur'an, Klaten. Dibuat dengan ❤ untuk dakwah.</p>
   </div>
 </footer>
+
+<!-- ================= TOMBOL WA MENGAMBANG ================= -->
+<a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="wa-float" aria-label="Chat Admin via WhatsApp">
+  💬
+</a>
 
 <script src="js/script.js"></script>
 </body>
