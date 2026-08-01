@@ -312,6 +312,10 @@ img{max-width:100%; display:block;}
   padding:18px 0; font-size:12.5px; color:rgba(255,255,255,0.5);
 }
 
+/* ================= SCROLL REVEAL ================= */
+.reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease;}
+.reveal.in-view{opacity:1; transform:translateY(0);}
+
 /* ================= URGENCY BANNER ================= */
 .urgency-banner{
   background:linear-gradient(90deg, var(--sky-dark), var(--purple));
