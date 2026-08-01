@@ -312,6 +312,48 @@ img{max-width:100%; display:block;}
   padding:18px 0; font-size:12.5px; color:rgba(255,255,255,0.5);
 }
 
+/* ================= GALLERY FILTER ================= */
+.gallery-filter{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:26px;}
+.filter-btn{
+  font-family:'Poppins'; font-weight:500; font-size:13px;
+  padding:9px 20px; border-radius:30px;
+  border:1.5px solid var(--line); background:var(--white);
+  color:var(--text-soft); cursor:pointer; transition:.2s ease;
+}
+.filter-btn:hover{border-color:var(--sky);}
+.filter-btn.active{background:var(--sky); border-color:var(--sky); color:var(--white); font-weight:600;}
+.gallery-item.hidden{display:none;}
+
+/* ================= FAQ ================= */
+.faq-list{max-width:720px; margin:0 auto;}
+.faq-item{
+  background:var(--white); border:1px solid var(--line);
+  border-radius:var(--radius-sm); padding:16px 20px; margin-bottom:12px;
+}
+.faq-item summary{
+  font-family:'Baloo 2'; font-weight:600; font-size:15px;
+  cursor:pointer; list-style:none; position:relative; padding-right:26px;
+}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{
+  content:"+"; position:absolute; right:0; top:0;
+  font-size:20px; color:var(--sky-dark); font-weight:700;
+}
+.faq-item[open] summary::after{content:"–";}
+.faq-item p{font-size:13.5px; color:var(--text-soft); margin-top:12px;}
+
+/* ================= WHATSAPP FLOAT ================= */
+.wa-float{
+  position:fixed; bottom:22px; right:22px; z-index:200;
+  width:56px; height:56px; border-radius:50%;
+  background:linear-gradient(135deg, var(--sky), var(--sky-dark));
+  color:var(--white); font-size:26px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 24px rgba(61,130,184,0.4);
+  transition:transform .2s ease;
+}
+.wa-float:hover{transform:scale(1.08);}
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 900px){
   .grid-4{grid-template-columns:repeat(2,1fr);}
@@ -354,4 +396,5 @@ img{max-width:100%; display:block;}
   .btn{width:100%; text-align:center;}
   .hero-btns{flex-direction:column;}
   .hero-btns .btn{width:100%;}
+  .wa-float{width:50px; height:50px; font-size:22px; bottom:16px; right:16px;}
 }
