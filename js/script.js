@@ -99,6 +99,105 @@ formDaftar.addEventListener('submit', function (e) {
     });
 });
 
+/* ---------- 5. Filter Galeri ---------- */
+const filterBtns = document.querySelectorAll('.filter-btn');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+
+    // query ulang setiap klik, supaya tetap benar walau galeri
+    // baru saja diganti otomatis dari Google Sheet
+    document.querySelectorAll('#galleryGrid .gallery-item').forEach(item => {
+      if (filter === 'Semua' || item.dataset.category === filter) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+  });
+});
+
+
+/* ============================================
+   6. KONTEN DINAMIS DARI GOOGLE SHEET (OPSIONAL)
+   ============================================
+   Kalau Anda ingin Artikel & Galeri bisa diupdate cukup
+   dengan edit Google Sheet (tanpa sentuh kode sama sekali),
+   isi SHEET_ID di bawah ini. Panduan lengkap ada di README.md.
+
+   Kalau dibiarkan kosong, website tetap jalan normal
+   memakai konten statis yang sudah ada di index.html.
+*/
+const SHEET_ID = "https://docs.google.com/spreadsheets/d/1v2jMro90-PH40YLaDAklNztoQG2tGO8xueuzba2V2X4/edit?usp=sharing";
+
+async function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.substring(47, text.length - 2));
+  const cols = json.table.cols.map(c => c.label);
+  return json.table.rows.map(r => {
+    const obj = {};
+    cols.forEach((c, i) => { obj[c] = r.c[i] ? r.c[i].v : ''; });
+    return obj;
+  });
+}
+
+async function loadArtikelFromSheet() {
+  try {
+    const data = await fetchSheet('Artikel');
+    const grid = document.getElementById('articleGrid');
+    if (!data.length) return; // sheet kosong -> biarkan statis
+
+    grid.innerHTML = data.map(item => `
+      <article class="article-card">
+        <span class="article-tag">${item.Kategori || 'Kabar'}</span>
+        <h4>${item.Judul || ''}</h4>
+        <p>${item.Ringkasan || ''}</p>
+        ${item.Link ? `<a href="${item.Link}" target="_blank" rel="noopener" class="article-link">Baca selengkapnya →</a>` : ''}
+      </article>
+    `).join('');
+  } catch (err) {
+    // Gagal ambil data (SHEET_ID belum diisi / sheet privat) -> diamkan saja,
+    // konten statis di index.html tetap tampil seperti biasa.
+  }
+}
+
+async function loadGaleriFromSheet() {
+  try {
+    const data = await fetchSheet('Galeri');
+    const grid = document.getElementById('galleryGrid');
+    if (!data.length) return;
+
+    const colorClasses = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6'];
+    grid.innerHTML = data.map((item, i) => {
+      const cls = colorClasses[i % colorClasses.length];
+      const bg = item.Gambar
+        ? `style="background-image:url('${item.Gambar}'); background-size:cover; background-position:center;"`
+        : '';
+      return `
+        <div class="gallery-item ${item.Gambar ? '' : cls}" data-category="${item.Kategori || 'Lainnya'}" ${bg}>
+          <span>${item.Nama || ''}</span>
+        </div>`;
+    }).join('');
+
+    // pasang ulang event filter setelah konten baru masuk
+    document.querySelectorAll('#galleryGrid .gallery-item').forEach(el => {
+      // konten baru otomatis ikut ter-filter lewat data-category
+    });
+  } catch (err) {
+    // Diamkan -> konten galeri statis tetap tampil
+  }
+}
+
+if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
+  loadArtikelFromSheet();
+  loadGaleriFromSheet();
+}
+
 function showStatus(type, message) {
   formStatus.textContent = message;
   formStatus.className = 'form-status show ' + type;
