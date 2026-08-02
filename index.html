@@ -126,8 +126,23 @@
   </div>
 </section>
 
+<!-- ================= CERITA PENDIRIAN ================= -->
+<section class="section section-soft">
+  <div class="container">
+    <div class="cerita-wrap">
+      <p class="eyebrow">✦ Kisah di Balik Ma'had</p>
+      <h2>Berawal dari Keresahan yang Sama</h2>
+      <p class="cerita-text">Banyak orang tua rindu melihat putrinya dekat dengan Al-Qur'an, namun bingung mencari lingkungan yang benar-benar menjaga fitrahnya — jauh dari pergaulan yang merusak, dekat dengan Al-Qur'an dan As-Sunnah. Dari keresahan itulah Ma'had Shafwatul Qur'an hadir: sebuah ikhtiar sederhana untuk menghadirkan tempat di mana putri-putri terbaik dibina menjadi penghafal Al-Qur'an yang istiqamah, tanpa kehilangan kehangatan sebuah rumah.</p>
+      <p class="cerita-text">Sebagai angkatan pertama, kami memulainya dengan penuh kesungguhan — memilih pembina terbaik, menyiapkan fasilitas dengan cermat, dan membuka hati untuk mendampingi setiap santriwati secara personal. Kami mengundang Anda untuk menjadi bagian dari langkah awal ini.</p>
+      <div class="center" style="margin-top:8px">
+        <a href="https://chat.whatsapp.com/GANTI_DENGAN_LINK_GRUP_ANDA" target="_blank" rel="noopener" class="btn btn-outline">💬 Gabung Grup WhatsApp Calon Wali Santriwati</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= PROGRAM ================= -->
-<section class="section section-soft" id="program">
+<section class="section" id="program">
   <div class="container">
     <p class="eyebrow center">✦ Program Pendidikan</p>
     <h2 class="center">Belajar Al-Qur'an Jadi Menyenangkan</h2>
@@ -233,6 +248,7 @@
       <button class="filter-btn" data-filter="Gedung">Gedung</button>
       <button class="filter-btn" data-filter="Kegiatan">Kegiatan</button>
       <button class="filter-btn" data-filter="Asrama">Asrama</button>
+      <button class="filter-btn" data-filter="Pembangunan">Progres Pembangunan</button>
     </div>
 
     <div class="gallery-grid" id="galleryGrid">
@@ -300,21 +316,41 @@
         <span class="article-tag">Parenting Qurani</span>
         <h4>5 Cara Menumbuhkan Cinta Al-Qur'an pada Anak</h4>
         <p>Tips praktis bagi orang tua untuk membiasakan anak dekat dengan Al-Qur'an sejak dini.</p>
-        <a href="#" class="article-link">Baca selengkapnya →</a>
+        <a href="https://wa.me/6289788842802?text=Assalamu%27alaikum%2C%20saya%20ingin%20tanya%20soal%20tips%20menumbuhkan%20cinta%20Al-Qur%27an" target="_blank" rel="noopener" class="article-link">Tanya lebih lanjut ke Admin →</a>
       </article>
       <article class="article-card">
-        <span class="article-tag">Kabar Ma'had</span>
-        <h4>Wisuda Tahfidz Angkatan Terbaru</h4>
-        <p>Ma'had Shafwatul Qur'an mengadakan tasyakuran wisuda bagi santriwati yang khatam hafalan.</p>
-        <a href="#" class="article-link">Baca selengkapnya →</a>
+        <span class="article-tag">Parenting</span>
+        <h4>Anak Pertama Kali Mondok? Begini Cara Membantunya Beradaptasi</h4>
+        <p>Wajar kalau ada rasa cemas melepas putri untuk pertama kali tinggal di asrama. Kenali cara mempersiapkan mental anak dan diri Anda sendiri, mulai dari komunikasi rutin hingga membangun kepercayaan pada pembina.</p>
+        <a href="https://wa.me/6289788842802?text=Assalamu%27alaikum%2C%20saya%20ingin%20tanya%20soal%20adaptasi%20anak%20mondok" target="_blank" rel="noopener" class="article-link">Tanya lebih lanjut ke Admin →</a>
       </article>
       <article class="article-card">
         <span class="article-tag">Tazkiyah</span>
         <h4>Keutamaan Menghafal Al-Qur'an di Usia Muda</h4>
         <p>Mengenal keutamaan dan keberkahan menjadi penghafal Al-Qur'an sejak kecil.</p>
-        <a href="#" class="article-link">Baca selengkapnya →</a>
+        <a href="https://wa.me/6289788842802?text=Assalamu%27alaikum%2C%20saya%20ingin%20tanya%20soal%20keutamaan%20menghafal%20Al-Qur%27an" target="_blank" rel="noopener" class="article-link">Tanya lebih lanjut ke Admin →</a>
       </article>
     </div>
+  </div>
+</section>
+
+<!-- ================= DAFTAR MINAT (RINGKAS) ================= -->
+<section class="section minat-section" id="minat">
+  <div class="container">
+    <div class="minat-wrap">
+      <div class="minat-text">
+        <p class="eyebrow">✦ Belum Yakin?</p>
+        <h3>Daftar Minat Dulu, Yuk</h3>
+        <p>Belum siap isi form lengkap? Tinggalkan nama &amp; nomor WA Anda — kami akan menghubungi untuk info lebih lanjut, tanpa mengikat apapun.</p>
+      </div>
+      <form id="formMinat" class="minat-form">
+        <input type="hidden" name="form_type" value="minat">
+        <input type="text" name="nama" required placeholder="Nama Anda">
+        <input type="tel" name="no_wa" required placeholder="No. WhatsApp">
+        <button type="submit" id="btnMinat">Kirim</button>
+      </form>
+    </div>
+    <div class="form-status" id="minatStatus"></div>
   </div>
 </section>
 
@@ -389,8 +425,19 @@
 <section class="section" id="donasi">
   <div class="container">
     <p class="eyebrow center">✦ Donasi</p>
-    <h2 class="center">Dukung Dakwah &amp; Pendidikan Qurani</h2>
-    <p class="section-desc center">Salurkan infaq/donasi Anda untuk operasional ma'had, beasiswa santriwati dhuafa, dan pembangunan fasilitas belajar.</p>
+    <h2 class="center">Jadi Bagian dari Angkatan Pertama</h2>
+    <p class="section-desc center">Sebagai ma'had baru, kami masih menyiapkan fasilitas dan membuka kesempatan beasiswa bagi santriwati dhuafa. Infaq Anda — sekecil apapun — jadi bagian nyata dari perjalanan angkatan pertama ini.</p>
+
+    <div class="donasi-progress-wrap">
+      <div class="donasi-progress-track"><div class="donasi-progress-fill" id="donasiBar"></div></div>
+      <p class="donasi-progress-label" id="donasiLabel">Memuat progres donasi...</p>
+    </div>
+
+    <div class="grid-3 donasi-kategori">
+      <div class="dk-item"><div class="dk-icon">🏗️</div><div class="dk-title">Pembangunan Fasilitas</div><div class="dk-desc">Menyiapkan sarana belajar &amp; asrama untuk angkatan pertama</div></div>
+      <div class="dk-item"><div class="dk-icon">🎓</div><div class="dk-title">Beasiswa Santriwati Dhuafa</div><div class="dk-desc">Membantu santriwati kurang mampu tetap bisa menghafal Al-Qur'an</div></div>
+      <div class="dk-item"><div class="dk-icon">📚</div><div class="dk-title">Operasional Ma'had</div><div class="dk-desc">Mendukung kegiatan belajar mengajar sehari-hari</div></div>
+    </div>
 
     <div class="grid-2 donasi-grid">
       <div class="card">
