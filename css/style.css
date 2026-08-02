@@ -91,6 +91,8 @@ img{max-width:100%; display:block;}
   color:var(--sky-dark);
 }
 .brand-star{width:22px; height:22px; fill:var(--coral);}
+.brand-logo{height:34px; width:auto; vertical-align:middle; margin-right:8px;}
+.footer .brand-logo{filter:brightness(0) invert(1);}
 .nav-links{display:flex; align-items:center; gap:26px;}
 .nav-links a{font-weight:500; font-size:14.5px; color:var(--text);}
 .nav-links a:hover{color:var(--sky-dark);}
