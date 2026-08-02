@@ -286,9 +286,36 @@ function renderKuota() {
 
   const percent = Math.min(100, Math.round((KUOTA_TERISI / KUOTA_TOTAL) * 100));
   bar.style.width = percent + '%';
-  label.textContent = `${KUOTA_TERISI} dari ${KUOTA_TOTAL} kuota santri baru sudah terisi`;
+  label.textContent = `${KUOTA_TERISI} dari ${KUOTA_TOTAL} kuota santriwati baru sudah terisi`;
 }
 renderKuota();
+
+
+/* ============================================
+   8b. PROGRESS DONASI
+   ============================================
+   Sama seperti kuota, datanya dari tab "Pengaturan" di Sheet
+   (key: DONASI_TERKUMPUL & DONASI_TARGET, dalam satuan Rupiah).
+*/
+let DONASI_TERKUMPUL = 0;
+let DONASI_TARGET = 0;
+
+function renderDonasi() {
+  const bar = document.getElementById('donasiBar');
+  const label = document.getElementById('donasiLabel');
+  if (!bar || !label) return;
+
+  if (!DONASI_TARGET) {
+    label.textContent = 'Jadilah donatur pertama untuk angkatan pertama kami!';
+    bar.style.width = '4%';
+    return;
+  }
+  const percent = Math.min(100, Math.round((DONASI_TERKUMPUL / DONASI_TARGET) * 100));
+  const fmt = (n) => 'Rp' + Number(n).toLocaleString('id-ID');
+  bar.style.width = Math.max(percent, 3) + '%';
+  label.textContent = `${fmt(DONASI_TERKUMPUL)} terkumpul dari target ${fmt(DONASI_TARGET)}`;
+}
+renderDonasi();
 
 
 /* ============================================
@@ -414,10 +441,17 @@ async function loadPengaturanFromSheet() {
       if (key === 'KUOTA_TOTAL' && value !== '') {
         KUOTA_TOTAL = Number(value);
       }
+      if (key === 'DONASI_TERKUMPUL' && value !== '') {
+        DONASI_TERKUMPUL = Number(value);
+      }
+      if (key === 'DONASI_TARGET' && value !== '') {
+        DONASI_TARGET = Number(value);
+      }
     });
 
     renderCountdown();
     renderKuota();
+    renderDonasi();
   } catch (err) {
     // Tab "Pengaturan" belum ada / gagal dimuat -> pakai nilai cadangan
   }
@@ -479,4 +513,48 @@ function showStatus(type, message) {
   formStatus.textContent = message;
   formStatus.className = 'form-status show ' + type;
   formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+
+/* ============================================
+   12. FORM DAFTAR MINAT (RINGKAS)
+   ============================================ */
+const formMinat = document.getElementById('formMinat');
+const minatStatus = document.getElementById('minatStatus');
+const btnMinat = document.getElementById('btnMinat');
+
+if (formMinat) {
+  formMinat.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (SCRIPT_URL.includes("PASTE_URL_GOOGLE_APPS_SCRIPT_DI_SINI")) {
+      showMinatStatus('error', 'Backend belum terhubung.');
+      return;
+    }
+
+    const formData = new FormData(formMinat);
+    btnMinat.disabled = true;
+    btnMinat.textContent = 'Mengirim...';
+
+    fetch(SCRIPT_URL, { method: 'POST', body: formData })
+      .then(() => {
+        showMinatStatus('success', 'Terima kasih! Admin kami akan segera menghubungi Anda via WhatsApp.');
+        formMinat.reset();
+      })
+      .catch(() => {
+        showMinatStatus('error', 'Gagal mengirim, coba lagi ya.');
+      })
+      .finally(() => {
+        btnMinat.disabled = false;
+        btnMinat.textContent = 'Kirim';
+      });
+  });
+}
+
+function showMinatStatus(type, message) {
+  if (!minatStatus) return;
+  minatStatus.textContent = message;
+  minatStatus.className = 'form-status show ' + type;
+  minatStatus.style.maxWidth = '900px';
+  minatStatus.style.margin = '16px auto 0';
 }
