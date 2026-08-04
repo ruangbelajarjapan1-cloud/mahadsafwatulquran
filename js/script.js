@@ -156,15 +156,29 @@ document.addEventListener('click', (e) => {
 */
 const SHEET_ID = "1v2jMro90-PH40YLaDAklNztoQG2tGO8xueuzba2V2X4";
 
-async function fetchSheet(sheetName) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&headers=1`;
+async function fetchSheet(sheetName, columnKeys) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
   const res = await fetch(url);
   const text = await res.text();
   const json = JSON.parse(text.substring(47, text.length - 2));
-  const cols = json.table.cols.map(c => c.label);
-  return json.table.rows.map(r => {
+  const rows = json.table.rows || [];
+
+  // Kita tentukan sendiri nama kolom berdasarkan URUTAN (bukan berharap Google
+  // mendeteksi baris judul dengan benar -- ini sering meleset & jadi sumber bug).
+  const keys = columnKeys || json.table.cols.map(c => c.label);
+
+  // Deteksi apakah baris pertama adalah baris judul (Nama/Kategori/dst) atau
+  // sudah berupa data -- kalau cocok persis dengan nama kolom, baris itu dilewati.
+  let startIndex = 0;
+  if (rows.length && columnKeys) {
+    const firstRowValues = (rows[0].c || []).map(c => (c ? String(c.v).trim() : ''));
+    const looksLikeHeader = columnKeys.every((key, i) => firstRowValues[i] === key);
+    if (looksLikeHeader) startIndex = 1;
+  }
+
+  return rows.slice(startIndex).map(r => {
     const obj = {};
-    cols.forEach((c, i) => { obj[c] = r.c[i] ? r.c[i].v : ''; });
+    keys.forEach((k, i) => { obj[k] = r.c[i] ? r.c[i].v : ''; });
     return obj;
   });
 }
@@ -173,7 +187,7 @@ async function loadArtikelFromSheet() {
   try {
     const grid = document.getElementById('articleGrid');
     if (!grid) return; // halaman ini tidak punya grid artikel
-    const data = await fetchSheet('Artikel');
+    const data = await fetchSheet('Artikel', ['Tanggal','Kategori','Judul','Ringkasan','Link']);
     if (!data.length) { restoreStaticIfEmpty('articleGrid'); return; }
 
     grid.innerHTML = data.map(item => `
@@ -193,7 +207,7 @@ async function loadGaleriFromSheet() {
   try {
     const wrap = document.getElementById('galleryBlocks');
     if (!wrap) return; // halaman ini tidak punya galeri
-    const data = await fetchSheet('Galeri');
+    const data = await fetchSheet('Galeri', ['Nama','Kategori','Gambar']);
     if (!data.length) return; // sheet kosong -> biarkan blok statis yang sudah ada di HTML
 
     // Kelompokkan foto per kategori
@@ -252,7 +266,7 @@ async function loadInstagramFromSheet() {
   try {
     const grid = document.getElementById('igGrid');
     if (!grid) return;
-    const data = await fetchSheet('Instagram');
+    const data = await fetchSheet('Instagram', ['URL']);
     if (!data.length) return; // sheet kosong -> biarkan fallback statis (tombol ke profil IG)
 
     grid.innerHTML = data.slice(0, 6).map(item => `
@@ -463,7 +477,7 @@ function parseGvizValue(raw) {
 
 async function loadPengaturanFromSheet() {
   try {
-    const data = await fetchSheet('Pengaturan');
+    const data = await fetchSheet('Pengaturan', ['Key','Value']);
     if (!data.length) return;
 
     data.forEach(row => {
@@ -496,7 +510,7 @@ async function loadPengaturanFromSheet() {
 
 async function loadKalenderFromSheet() {
   try {
-    const data = await fetchSheet('Kalender');
+    const data = await fetchSheet('Kalender', ['Tanggal','Judul']);
     if (!data.length) return;
 
     const events = {};
