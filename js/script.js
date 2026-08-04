@@ -104,12 +104,69 @@ if (formDaftar) {
   });
 }
 
-/* ---------- 5. Lightbox Foto (klik foto -> popup, ada tombol close) ---------- */
+/* ---------- 5. Galeri: Folder per Kategori + Carousel ---------- */
+
+// Data cadangan (dipakai kalau tab Galeri di Sheet belum diisi / gagal dimuat)
+const STATIC_GALLERY = {
+  'Gedung': [
+    { Nama: 'Gedung Kelas', Gambar: '', _cls: 'g1' },
+    { Nama: 'Aula Utama', Gambar: '', _cls: 'g4' },
+    { Nama: 'Perpustakaan', Gambar: '', _cls: 'g6' }
+  ],
+  'Kegiatan': [
+    { Nama: 'Ruang Tahfizh', Gambar: '', _cls: 'g2' },
+    { Nama: 'Lapangan', Gambar: '', _cls: 'g5' }
+  ],
+  'Asrama': [
+    { Nama: 'Asrama Santriwati', Gambar: '', _cls: 'g3' }
+  ]
+};
+
+const FOLDER_ORDER = ['Gedung', 'Kegiatan', 'Asrama', 'Pembangunan'];
+const FOLDER_ICONS = { 'Gedung': '🏢', 'Kegiatan': '📸', 'Asrama': '🛏️', 'Pembangunan': '🏗️' };
+
+let CURRENT_GALLERY_GROUPS = STATIC_GALLERY;
+
+function renderGalleryFolders(groups) {
+  const wrap = document.getElementById('galleryFolders');
+  if (!wrap) return;
+  CURRENT_GALLERY_GROUPS = groups;
+
+  const known = FOLDER_ORDER.filter(k => groups[k] && groups[k].length);
+  const others = Object.keys(groups).filter(k => !FOLDER_ORDER.includes(k) && groups[k].length);
+  const keys = [...known, ...others];
+
+  wrap.innerHTML = keys.map(kat => {
+    const items = groups[kat];
+    const cover = items[0];
+    const icon = FOLDER_ICONS[kat] || '✦';
+    const bg = cover.Gambar
+      ? `style="background-image:url('${cover.Gambar}'); background-size:cover; background-position:center;"`
+      : '';
+    const cls = cover.Gambar ? '' : (cover._cls || 'g1');
+    return `
+      <button type="button" class="gallery-folder ${cls}" ${bg} data-category="${kat}">
+        <span class="folder-overlay"></span>
+        <span class="folder-info">
+          <strong>${icon} ${kat}</strong>
+          <span class="folder-count">${items.length} foto</span>
+        </span>
+      </button>`;
+  }).join('');
+}
+
+// Render tampilan awal (statis) begitu halaman dimuat, sebelum Sheet selesai diambil
+renderGalleryFolders(STATIC_GALLERY);
+
+
+/* ---------- 6. Carousel / Lightbox Foto ---------- */
 const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
 lightbox.innerHTML = `
   <button class="lightbox-close" aria-label="Tutup">✕</button>
+  <button class="lightbox-nav lightbox-prev" aria-label="Sebelumnya">‹</button>
   <img class="lightbox-img" src="" alt="">
+  <button class="lightbox-nav lightbox-next" aria-label="Berikutnya">›</button>
   <div class="lightbox-caption"></div>
 `;
 document.body.appendChild(lightbox);
@@ -117,10 +174,23 @@ document.body.appendChild(lightbox);
 const lightboxImg = lightbox.querySelector('.lightbox-img');
 const lightboxCaption = lightbox.querySelector('.lightbox-caption');
 
-function openLightbox(bgUrl, caption) {
-  if (!bgUrl) return;
-  lightboxImg.src = bgUrl;
-  lightboxCaption.textContent = caption || '';
+let carouselItems = [];
+let carouselIndex = 0;
+
+function showCarouselSlide() {
+  const item = carouselItems[carouselIndex];
+  if (!item) return;
+  const url = item.Gambar || '';
+  lightboxImg.src = url;
+  lightboxCaption.textContent = `${item.Nama || ''} — ${carouselIndex + 1}/${carouselItems.length}`;
+}
+
+function openCarousel(category) {
+  const items = (CURRENT_GALLERY_GROUPS[category] || []).filter(i => i.Gambar);
+  if (!items.length) return; // folder ini belum ada foto asli, jangan buka carousel kosong
+  carouselItems = items;
+  carouselIndex = 0;
+  showCarouselSlide();
   lightbox.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -128,24 +198,36 @@ function closeLightbox() {
   lightbox.classList.remove('open');
   document.body.style.overflow = '';
 }
-lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+function nextSlide() {
+  carouselIndex = (carouselIndex + 1) % carouselItems.length;
+  showCarouselSlide();
+}
+function prevSlide() {
+  carouselIndex = (carouselIndex - 1 + carouselItems.length) % carouselItems.length;
+  showCarouselSlide();
+}
 
-// Event delegation: berlaku untuk foto statis MAUPUN yang nanti dimuat dari Sheet
+lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+lightbox.querySelector('.lightbox-next').addEventListener('click', nextSlide);
+lightbox.querySelector('.lightbox-prev').addEventListener('click', prevSlide);
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+// Klik folder -> buka carousel kategori itu
 document.addEventListener('click', (e) => {
-  const item = e.target.closest('.gallery-item');
-  if (!item) return;
-  const bg = item.style.backgroundImage; // format: url("...")
-  const match = bg.match(/url\(["']?(.*?)["']?\)/);
-  const url = match ? match[1] : '';
-  const caption = item.querySelector('span') ? item.querySelector('span').textContent : '';
-  if (url) openLightbox(url, caption);
+  const folder = e.target.closest('.gallery-folder');
+  if (!folder) return;
+  openCarousel(folder.dataset.category);
 });
 
 
 /* ============================================
-   6. KONTEN DINAMIS DARI GOOGLE SHEET (OPSIONAL)
+   7. KONTEN DINAMIS DARI GOOGLE SHEET (OPSIONAL)
    ============================================
    Kalau Anda ingin Artikel & Galeri bisa diupdate cukup
    dengan edit Google Sheet (tanpa sentuh kode sama sekali),
@@ -205,14 +287,12 @@ async function loadArtikelFromSheet() {
 
 async function loadGaleriFromSheet() {
   try {
-    const wrap = document.getElementById('galleryBlocks');
+    const wrap = document.getElementById('galleryFolders');
     if (!wrap) return; // halaman ini tidak punya galeri
     const data = await fetchSheet('Galeri', ['Nama','Kategori','Gambar']);
-    if (!data.length) return; // sheet kosong -> biarkan blok statis yang sudah ada di HTML
+    if (!data.length) return; // sheet kosong -> tetap pakai folder statis yang sudah dirender
 
     // Kelompokkan foto per kategori
-    const order = ['Gedung', 'Kegiatan', 'Asrama', 'Pembangunan'];
-    const icons = { 'Gedung': '🏢', 'Kegiatan': '📸', 'Asrama': '🛏️', 'Pembangunan': '🏗️' };
     const groups = {};
     data.forEach(item => {
       const kat = (item.Kategori || 'Lainnya').toString().trim();
@@ -220,29 +300,9 @@ async function loadGaleriFromSheet() {
       groups[kat].push(item);
     });
 
-    // Urutkan: kategori yang sudah dikenal duluan, sisanya menyusul
-    const knownKeys = order.filter(k => groups[k]);
-    const otherKeys = Object.keys(groups).filter(k => !order.includes(k));
-    const sortedKeys = [...knownKeys, ...otherKeys];
-
-    wrap.innerHTML = sortedKeys.map((kat, gi) => {
-      const icon = icons[kat] || '✦';
-      const itemsHtml = groups[kat].map((item, i) => {
-        const bg = item.Gambar
-          ? `style="background-image:url('${item.Gambar}'); background-size:cover; background-position:center;"`
-          : '';
-        const cls = item.Gambar ? '' : ['g1','g2','g3','g4','g5','g6'][i % 6];
-        return `
-          <div class="gallery-item ${cls}" ${bg}>
-            <span>${item.Nama || ''}</span>
-          </div>`;
-      }).join('');
-      return `
-        <h3 class="sub-heading" style="${gi > 0 ? 'margin-top:36px' : ''}">${icon} ${kat}</h3>
-        <div class="gallery-grid">${itemsHtml}</div>`;
-    }).join('');
+    renderGalleryFolders(groups);
   } catch (err) {
-    // Gagal dimuat -> blok statis yang sudah ada di HTML tetap tampil
+    // Gagal dimuat -> folder statis yang sudah dirender di awal tetap tampil
   }
 }
 
