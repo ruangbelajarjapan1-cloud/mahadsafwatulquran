@@ -127,6 +127,15 @@ const FOLDER_ICONS = { 'Gedung': '🏢', 'Kegiatan': '📸', 'Asrama': '🛏️'
 
 let CURRENT_GALLERY_GROUPS = STATIC_GALLERY;
 
+// Warna & motif tetap per kategori, supaya konsisten dan mudah dikenali
+const FOLDER_STYLES = {
+  'Gedung':      'g1',
+  'Kegiatan':    'g2',
+  'Asrama':      'g3',
+  'Pembangunan': 'g4'
+};
+const FALLBACK_STYLES = ['g5', 'g6', 'g1', 'g2', 'g3', 'g4'];
+
 function renderGalleryFolders(groups) {
   const wrap = document.getElementById('galleryFolders');
   if (!wrap) return;
@@ -136,19 +145,18 @@ function renderGalleryFolders(groups) {
   const others = Object.keys(groups).filter(k => !FOLDER_ORDER.includes(k) && groups[k].length);
   const keys = [...known, ...others];
 
-  wrap.innerHTML = keys.map(kat => {
+  wrap.innerHTML = keys.map((kat, i) => {
     const items = groups[kat];
-    const cover = items[0];
     const icon = FOLDER_ICONS[kat] || '✦';
-    const bg = cover.Gambar
-      ? `style="background-image:url('${cover.Gambar}'); background-size:cover; background-position:center;"`
-      : '';
-    const cls = cover.Gambar ? '' : (cover._cls || 'g1');
+    const cls = FOLDER_STYLES[kat] || FALLBACK_STYLES[i % FALLBACK_STYLES.length];
     return `
-      <button type="button" class="gallery-folder ${cls}" ${bg} data-category="${kat}">
-        <span class="folder-overlay"></span>
+      <button type="button" class="gallery-folder ${cls}" data-category="${kat}">
+        <span class="folder-ornament" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><polygon points="50,6 60,38 92,38 66,58 76,90 50,70 24,90 34,58 8,38 40,38"/></svg>
+        </span>
+        <span class="folder-icon">${icon}</span>
         <span class="folder-info">
-          <strong>${icon} ${kat}</strong>
+          <strong>${kat}</strong>
           <span class="folder-count">${items.length} foto</span>
         </span>
       </button>`;
