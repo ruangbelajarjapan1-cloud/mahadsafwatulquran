@@ -111,12 +111,13 @@ filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const filter = btn.dataset.filter;
+    const filter = (btn.dataset.filter || '').trim().toLowerCase();
 
     // query ulang setiap klik, supaya tetap benar walau galeri
     // baru saja diganti otomatis dari Google Sheet
     document.querySelectorAll('#galleryGrid .gallery-item').forEach(item => {
-      if (filter === 'Semua' || item.dataset.category === filter) {
+      const itemCategory = (item.dataset.category || '').trim().toLowerCase();
+      if (filter === 'semua' || itemCategory === filter) {
         item.classList.remove('hidden');
       } else {
         item.classList.add('hidden');
@@ -185,7 +186,7 @@ async function loadGaleriFromSheet() {
         ? `style="background-image:url('${item.Gambar}'); background-size:cover; background-position:center;"`
         : '';
       return `
-        <div class="gallery-item ${item.Gambar ? '' : cls}" data-category="${item.Kategori || 'Lainnya'}" ${bg}>
+        <div class="gallery-item ${item.Gambar ? '' : cls}" data-category="${(item.Kategori || 'Lainnya').toString().trim()}" ${bg}>
           <span>${item.Nama || ''}</span>
         </div>`;
     }).join('');
