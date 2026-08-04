@@ -111,11 +111,19 @@ img{max-width:100%; display:block;}
   padding:100px 24px 90px;
   overflow:hidden;
 }
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1'%3E%3Cpolygon points='40,6 47,26 68,26 51,39 58,60 40,47 22,60 29,39 12,26 33,26'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:80px 80px;
+  opacity:0.07;
+  z-index:0;
+}
 .bismillah{
   font-family:'Amiri', serif; font-size:22px; color:rgba(255,255,255,0.85);
   margin-bottom:18px; letter-spacing:0.02em;
 }
-.hero-shapes{position:absolute; inset:0; pointer-events:none;}
+.hero-shapes{position:absolute; inset:0; pointer-events:none; z-index:1;}
 .hero-shapes .shape{position:absolute; fill:rgba(255,255,255,0.14); animation:floaty 7s ease-in-out infinite;}
 .shape-1{width:70px; top:12%; left:8%; animation-delay:0s;}
 .shape-2{width:50px; top:65%; left:15%; fill:var(--yellow); opacity:.5; animation-delay:1.2s;}
@@ -148,6 +156,15 @@ img{max-width:100%; display:block;}
 /* ================= STATS ================= */
 .stats{background:var(--white); padding:36px 24px; border-bottom:1px solid var(--line);}
 .stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px; text-align:center;}
+.stat-item{
+  position:relative; padding:16px 10px;
+}
+.stat-item::before, .stat-item::after{
+  content:""; position:absolute; width:14px; height:14px;
+  border:1.5px solid var(--sky); opacity:0.4;
+}
+.stat-item::before{top:0; left:6px; border-right:none; border-bottom:none;}
+.stat-item::after{bottom:0; right:6px; border-left:none; border-top:none;}
 .stat-item .num{
   display:block; font-family:'Baloo 2'; font-weight:800; font-size:34px; color:var(--coral);
 }
@@ -159,7 +176,13 @@ img{max-width:100%; display:block;}
 /* ================= SECTION GENERIC ================= */
 .section{padding:80px 24px;}
 .section-soft{background:var(--bg-soft);}
-.section h2{font-size:30px; margin-bottom:14px;}
+.section h2{font-size:30px; margin-bottom:14px; position:relative; padding-bottom:16px;}
+.section h2.center::after, .section h2::after{
+  content:""; position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+  width:0; height:2.5px; background:linear-gradient(90deg, var(--coral), var(--yellow));
+  border-radius:4px; transition:width 1s ease .15s;
+}
+.section.in-view h2::after{width:52px;}
 .section-desc{max-width:620px; color:var(--text-soft); margin-bottom:44px; font-size:15px;}
 .note-small{font-size:12.5px; color:var(--text-soft); margin-top:18px;}
 .note-small code{background:var(--bg-soft); padding:2px 6px; border-radius:6px;}
@@ -175,8 +198,15 @@ img{max-width:100%; display:block;}
   border:1px solid var(--line);
   border-radius:var(--radius-md);
   padding:28px;
+  position:relative; overflow:hidden;
 }
-.card h3{font-size:19px; margin-bottom:12px;}
+.card::after{
+  content:""; position:absolute; top:-16px; right:-16px;
+  width:48px; height:48px; opacity:0.08;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,1 15,9 23,9 16.5,13.5 19,22 12,17 5,22 7.5,13.5 1,9 9,9' fill='%233D82B8'/%3E%3C/svg%3E");
+  background-size:contain; background-repeat:no-repeat; pointer-events:none;
+}
+.card h3{font-size:19px; margin-bottom:12px; position:relative;}
 .list-check{margin-top:4px;}
 .list-check li{position:relative; padding-left:24px; margin-bottom:10px; font-size:14.5px; color:var(--text-soft);}
 .list-check li:before{content:"✓"; position:absolute; left:0; color:var(--sky); font-weight:700;}
@@ -185,9 +215,16 @@ img{max-width:100%; display:block;}
   border:none; color:var(--white); text-align:left;
   box-shadow:var(--shadow);
   transition:transform .2s ease;
+  position:relative; overflow:hidden;
+}
+.card-color::after{
+  content:""; position:absolute; top:-18px; right:-18px;
+  width:56px; height:56px; opacity:0.18;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,1 15,9 23,9 16.5,13.5 19,22 12,17 5,22 7.5,13.5 1,9 9,9' fill='%23ffffff'/%3E%3C/svg%3E");
+  background-size:contain; background-repeat:no-repeat; pointer-events:none;
 }
 .card-color:hover{transform:translateY(-6px);}
-.card-color h3{color:var(--white); font-size:18px;}
+.card-color h3{color:var(--white); font-size:18px; position:relative;}
 .card-color p{font-size:13.5px; color:rgba(255,255,255,0.92);}
 .card-icon{
   width:44px; height:44px; border-radius:14px;
@@ -370,6 +407,20 @@ img{max-width:100%; display:block;}
 .form-status.success{background:#E4FBEF; color:#0F8A4B;}
 .form-status.error{background:#FFEAEA; color:#C0392B;}
 
+.section-donasi{
+  position:relative; overflow:hidden;
+  background:linear-gradient(180deg, #FFFBF2 0%, var(--bg) 100%);
+}
+.section-donasi::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%23C99A3D' stroke-width='1'%3E%3Cpolygon points='45,8 53,30 76,30 57,44 65,66 45,52 25,66 33,44 14,30 37,30'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:90px 90px;
+  opacity:0.05;
+  pointer-events:none;
+}
+.section-donasi .container{position:relative; z-index:1;}
+
 .donasi-progress-wrap{max-width:560px; margin:0 auto 34px;}
 .donasi-progress-track{height:14px; background:var(--bg-soft); border-radius:20px; overflow:hidden; border:1px solid var(--line);}
 .donasi-progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--coral), var(--yellow)); border-radius:20px; transition:width 1s ease;}
@@ -426,6 +477,14 @@ img{max-width:100%; display:block;}
 }
 .skeleton-card{height:180px;}
 .skeleton-gallery{aspect-ratio:4/3;}
+
+/* ================= SECTION DIVIDER ================= */
+.section-divider{
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  max-width:260px; margin:0 auto; padding:38px 24px 0;
+}
+.divider-line{flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--line) 50%, transparent);}
+.section-divider svg{width:15px; height:15px; fill:var(--sky); flex-shrink:0;}
 
 /* ================= SCROLL REVEAL ================= */
 .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease;}
