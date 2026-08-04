@@ -452,6 +452,14 @@ img{max-width:100%; display:block;}
   border:1px solid var(--line);
 }
 
+/* ================= BAGIKAN ================= */
+.section-bagikan{
+  background:var(--bg-soft); padding:32px 24px; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+}
+.section-bagikan .container{display:flex; flex-direction:column; align-items:center; gap:14px;}
+.bagikan-text{font-size:14px; color:var(--text); font-weight:500;}
+
 /* ================= FOOTER ================= */
 .footer{background:#12313A; color:rgba(255,255,255,0.85); padding:56px 24px 0;}
 .footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:30px; padding-bottom:36px;}
@@ -624,6 +632,9 @@ img{max-width:100%; display:block;}
 }
 .wa-float:hover{transform:scale(1.08);}
 
+/* ================= STICKY CTA (mobile only) ================= */
+.sticky-cta{display:none;}
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 900px){
   .grid-4{grid-template-columns:repeat(2,1fr);}
@@ -671,5 +682,13 @@ img{max-width:100%; display:block;}
   .btn{width:100%; text-align:center;}
   .hero-btns{flex-direction:column;}
   .hero-btns .btn{width:100%;}
-  .wa-float{width:50px; height:50px; font-size:22px; bottom:16px; right:16px;}
+  .wa-float{width:50px; height:50px; font-size:22px; bottom:84px; right:16px;}
+  .sticky-cta{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    position:fixed; bottom:0; left:0; right:0; z-index:190;
+    background:var(--white); padding:12px 16px;
+    box-shadow:0 -6px 20px rgba(18,49,58,0.12);
+  }
+  .sticky-cta span{font-size:12.5px; font-weight:600; color:var(--text); flex:1;}
+  .sticky-cta .btn{padding:11px 18px; font-size:13px; white-space:nowrap;}
 }
