@@ -25,6 +25,25 @@ if (hamburgerBtn && navLinks) {
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+/* ---------- 2b. Tombol Bagikan Website ---------- */
+const btnBagikan = document.getElementById('btnBagikan');
+if (btnBagikan) {
+  btnBagikan.addEventListener('click', async () => {
+    const shareData = {
+      title: "Ma'had Shafwatul Qur'an — Klaten",
+      text: "Pesantren tahfizh Qur'an khusus putri di Klaten, angkatan pertama Tahun Ajaran 2026/2027. Yuk kenali lebih lanjut:",
+      url: window.location.href
+    };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch (err) { /* dibatalkan user, biarkan */ }
+    } else {
+      // Fallback untuk browser yang tidak dukung Web Share API (kebanyakan desktop)
+      const text = encodeURIComponent(shareData.text + ' ' + shareData.url);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+  });
+}
+
 /* ---------- 3. Animasi angka statistik ---------- */
 const statNums = document.querySelectorAll('.stat-item .num');
 const statsSection = document.querySelector('.stats');
