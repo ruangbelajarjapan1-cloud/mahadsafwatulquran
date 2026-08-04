@@ -104,26 +104,43 @@ if (formDaftar) {
   });
 }
 
-/* ---------- 5. Filter Galeri ---------- */
-const filterBtns = document.querySelectorAll('.filter-btn');
+/* ---------- 5. Lightbox Foto (klik foto -> popup, ada tombol close) ---------- */
+const lightbox = document.createElement('div');
+lightbox.className = 'lightbox';
+lightbox.innerHTML = `
+  <button class="lightbox-close" aria-label="Tutup">✕</button>
+  <img class="lightbox-img" src="" alt="">
+  <div class="lightbox-caption"></div>
+`;
+document.body.appendChild(lightbox);
 
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const filter = (btn.dataset.filter || '').trim().toLowerCase();
+const lightboxImg = lightbox.querySelector('.lightbox-img');
+const lightboxCaption = lightbox.querySelector('.lightbox-caption');
 
-    // query ulang setiap klik, supaya tetap benar walau galeri
-    // baru saja diganti otomatis dari Google Sheet
-    document.querySelectorAll('#galleryGrid .gallery-item').forEach(item => {
-      const itemCategory = (item.dataset.category || '').trim().toLowerCase();
-      if (filter === 'semua' || itemCategory === filter) {
-        item.classList.remove('hidden');
-      } else {
-        item.classList.add('hidden');
-      }
-    });
-  });
+function openLightbox(bgUrl, caption) {
+  if (!bgUrl) return;
+  lightboxImg.src = bgUrl;
+  lightboxCaption.textContent = caption || '';
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+// Event delegation: berlaku untuk foto statis MAUPUN yang nanti dimuat dari Sheet
+document.addEventListener('click', (e) => {
+  const item = e.target.closest('.gallery-item');
+  if (!item) return;
+  const bg = item.style.backgroundImage; // format: url("...")
+  const match = bg.match(/url\(["']?(.*?)["']?\)/);
+  const url = match ? match[1] : '';
+  const caption = item.querySelector('span') ? item.querySelector('span').textContent : '';
+  if (url) openLightbox(url, caption);
 });
 
 
@@ -174,24 +191,44 @@ async function loadArtikelFromSheet() {
 
 async function loadGaleriFromSheet() {
   try {
-    const grid = document.getElementById('galleryGrid');
-    if (!grid) return; // halaman ini tidak punya grid galeri
+    const wrap = document.getElementById('galleryBlocks');
+    if (!wrap) return; // halaman ini tidak punya galeri
     const data = await fetchSheet('Galeri');
-    if (!data.length) { restoreStaticIfEmpty('galleryGrid'); return; }
+    if (!data.length) return; // sheet kosong -> biarkan blok statis yang sudah ada di HTML
 
-    const colorClasses = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6'];
-    grid.innerHTML = data.map((item, i) => {
-      const cls = colorClasses[i % colorClasses.length];
-      const bg = item.Gambar
-        ? `style="background-image:url('${item.Gambar}'); background-size:cover; background-position:center;"`
-        : '';
+    // Kelompokkan foto per kategori
+    const order = ['Gedung', 'Kegiatan', 'Asrama', 'Pembangunan'];
+    const icons = { 'Gedung': '🏢', 'Kegiatan': '📸', 'Asrama': '🛏️', 'Pembangunan': '🏗️' };
+    const groups = {};
+    data.forEach(item => {
+      const kat = (item.Kategori || 'Lainnya').toString().trim();
+      if (!groups[kat]) groups[kat] = [];
+      groups[kat].push(item);
+    });
+
+    // Urutkan: kategori yang sudah dikenal duluan, sisanya menyusul
+    const knownKeys = order.filter(k => groups[k]);
+    const otherKeys = Object.keys(groups).filter(k => !order.includes(k));
+    const sortedKeys = [...knownKeys, ...otherKeys];
+
+    wrap.innerHTML = sortedKeys.map((kat, gi) => {
+      const icon = icons[kat] || '✦';
+      const itemsHtml = groups[kat].map((item, i) => {
+        const bg = item.Gambar
+          ? `style="background-image:url('${item.Gambar}'); background-size:cover; background-position:center;"`
+          : '';
+        const cls = item.Gambar ? '' : ['g1','g2','g3','g4','g5','g6'][i % 6];
+        return `
+          <div class="gallery-item ${cls}" ${bg}>
+            <span>${item.Nama || ''}</span>
+          </div>`;
+      }).join('');
       return `
-        <div class="gallery-item ${item.Gambar ? '' : cls}" data-category="${(item.Kategori || 'Lainnya').toString().trim()}" ${bg}>
-          <span>${item.Nama || ''}</span>
-        </div>`;
+        <h3 class="sub-heading" style="${gi > 0 ? 'margin-top:36px' : ''}">${icon} ${kat}</h3>
+        <div class="gallery-grid">${itemsHtml}</div>`;
     }).join('');
   } catch (err) {
-    restoreStaticIfEmpty('galleryGrid');
+    // Gagal dimuat -> blok statis yang sudah ada di HTML tetap tampil
   }
 }
 
@@ -239,7 +276,6 @@ async function loadInstagramFromSheet() {
 if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
   loadInstagramFromSheet();
   showSkeleton('articleGrid', 'card', 3);
-  showSkeleton('galleryGrid', 'gallery', 6);
   loadArtikelFromSheet();
   loadGaleriFromSheet();
 }
