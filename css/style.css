@@ -147,6 +147,7 @@ img{max-width:100%; display:block;}
 .hero h1{color:var(--white); font-size:44px; margin-bottom:16px;}
 .hero h1 span{color:var(--yellow);}
 .hero-desc{color:rgba(255,255,255,0.92); font-size:16px; max-width:600px; margin:0 auto 30px;}
+.highlight-yellow{color:var(--yellow); font-weight:700;}
 .hero-btns{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
 .hero-brosur-link{
   display:inline-block; margin-top:18px; font-size:12.5px; color:rgba(255,255,255,0.85);
