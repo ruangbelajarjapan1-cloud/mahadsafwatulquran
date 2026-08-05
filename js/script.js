@@ -31,7 +31,7 @@ if (btnBagikan) {
   btnBagikan.addEventListener('click', async () => {
     const shareData = {
       title: "Ma'had Shafwatul Qur'an — Klaten",
-      text: "Pesantren tahfizh Qur'an khusus putri di Klaten, angkatan pertama Tahun Ajaran 2026/2027. Yuk kenali lebih lanjut:",
+      text: "Pesantren tahfizh Qur'an khusus putri di Klaten, angkatan kedua Tahun Ajaran 2026/2027. Yuk kenali lebih lanjut:",
       url: window.location.href
     };
     if (navigator.share) {
@@ -457,7 +457,7 @@ function renderDonasi() {
   if (!bar || !label) return;
 
   if (!DONASI_TARGET) {
-    label.textContent = 'Jadilah donatur pertama untuk angkatan pertama kami!';
+    label.textContent = 'Mari raih pahala jariyah bersama kami dengan menjadi donatur.';
     bar.style.width = '4%';
     return;
   }
