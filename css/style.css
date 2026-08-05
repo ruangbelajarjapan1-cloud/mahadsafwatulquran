@@ -602,6 +602,17 @@ img{max-width:100%; display:block;}
 .lightbox-prev{left:16px;}
 .lightbox-next{right:16px;}
 
+/* ================= UNDUHAN ================= */
+.unduhan-grid{margin-top:10px;}
+.unduhan-card{
+  background:var(--white); border:1px solid var(--line); border-radius:var(--radius-md);
+  padding:30px 26px; text-align:center; transition:transform .25s ease, box-shadow .25s ease;
+}
+.unduhan-card:hover{transform:translateY(-6px); box-shadow:0 16px 32px rgba(18,49,58,0.12);}
+.unduhan-icon{font-size:38px; margin-bottom:14px;}
+.unduhan-card h3{font-size:17px; margin-bottom:10px;}
+.unduhan-card p{font-size:13px; color:var(--text-soft); margin-bottom:20px; line-height:1.6;}
+
 /* ================= FAQ ================= */
 .faq-list{max-width:720px; margin:0 auto;}
 .faq-item{
