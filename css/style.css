@@ -372,6 +372,20 @@ img{max-width:100%; display:block;}
 .section-daftar{
   background:linear-gradient(160deg, var(--purple), var(--sky-dark));
 }
+.jadwal-tahap{
+  max-width:720px; margin:0 auto 20px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+}
+.tahap-item{
+  background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25);
+  border-radius:var(--radius-sm); padding:16px 14px; text-align:center;
+}
+.tahap-item .tahap-label{
+  display:block; font-family:'Baloo 2'; font-weight:600; font-size:11.5px;
+  color:var(--yellow); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;
+}
+.tahap-item strong{display:block; color:var(--white); font-size:14px; line-height:1.4;}
+.tahap-kuota{background:rgba(255,255,255,0.2);}
+
 .syarat-box{
   max-width:720px; margin:0 auto 24px; background:rgba(255,255,255,0.12);
   border:1px solid rgba(255,255,255,0.25); border-radius:var(--radius-md); padding:22px 26px;
@@ -686,6 +700,7 @@ img{max-width:100%; display:block;}
   .lightbox-prev{left:6px;}
   .lightbox-next{right:6px;}
   .form-row{grid-template-columns:1fr;}
+  .jadwal-tahap{grid-template-columns:1fr; max-width:100%;}
   .syarat-box .list-check{grid-template-columns:1fr;}
   .form-card{padding:26px 20px;}
   .footer-grid{grid-template-columns:1fr; text-align:left;}
