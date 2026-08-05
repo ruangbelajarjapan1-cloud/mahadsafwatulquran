@@ -389,19 +389,32 @@ if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
    Nilai di bawah ini HANYA dipakai sebagai cadangan kalau sheet
    belum diisi / gagal dimuat — admin tidak perlu mengubah ini.
 */
-let PENDAFTARAN_DEADLINE = "2026-09-30";
+// Jadwal 2 tahap pendaftaran (bisa dioverride dari tab Pengaturan di Sheet)
+let TAHAP1_MULAI = "2026-09-01";
+let TAHAP1_SELESAI = "2026-12-11";
+let TAHAP2_MULAI = "2026-12-20";
+let TAHAP2_SELESAI = "2027-05-20";
 
 function renderCountdown() {
   const el = document.getElementById('countdownText');
   if (!el) return;
 
-  const deadline = new Date(PENDAFTARAN_DEADLINE + "T23:59:59");
   const now = new Date();
-  const diffMs = deadline - now;
-  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  const t1Mulai = new Date(TAHAP1_MULAI + "T00:00:00");
+  const t1Selesai = new Date(TAHAP1_SELESAI + "T23:59:59");
+  const t2Mulai = new Date(TAHAP2_MULAI + "T00:00:00");
+  const t2Selesai = new Date(TAHAP2_SELESAI + "T23:59:59");
 
-  if (diffDays > 0) {
-    el.textContent = `⏳ Gelombang pendaftaran ditutup dalam ${diffDays} hari lagi — daftarkan putra-putri Anda sekarang!`;
+  const diffDays = (target) => Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+
+  if (now < t1Mulai) {
+    el.textContent = `⏳ Pendaftaran Tahap 1 dibuka mulai ${t1Mulai.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })} — siapkan berkasnya dari sekarang!`;
+  } else if (now >= t1Mulai && now <= t1Selesai) {
+    el.textContent = `⏳ Pendaftaran Tahap 1 ditutup dalam ${diffDays(t1Selesai)} hari lagi — daftarkan putri Anda sekarang!`;
+  } else if (now > t1Selesai && now < t2Mulai) {
+    el.textContent = `Tahap 1 sudah ditutup. Pendaftaran Tahap 2 dibuka mulai ${t2Mulai.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })}.`;
+  } else if (now >= t2Mulai && now <= t2Selesai) {
+    el.textContent = `⏳ Pendaftaran Tahap 2 ditutup dalam ${diffDays(t2Selesai)} hari lagi — daftarkan putri Anda sekarang!`;
   } else {
     el.textContent = `Pendaftaran gelombang ini sudah ditutup. Hubungi admin untuk info gelombang berikutnya.`;
   }
@@ -414,8 +427,8 @@ renderCountdown();
    ============================================
    Sama seperti di atas — datanya dari tab "Pengaturan" di Sheet.
 */
-let KUOTA_TERISI = 62;
-let KUOTA_TOTAL = 100;
+let KUOTA_TERISI = 0;
+let KUOTA_TOTAL = 25;
 
 function renderKuota() {
   const bar = document.getElementById('kuotaBar');
@@ -572,6 +585,18 @@ async function loadPengaturanFromSheet() {
       const value = parseGvizValue(row.Value);
       if (key === 'PENDAFTARAN_DEADLINE' && value) {
         PENDAFTARAN_DEADLINE = String(value).slice(0, 10);
+      }
+      if (key === 'TAHAP1_MULAI' && value) {
+        TAHAP1_MULAI = String(value).slice(0, 10);
+      }
+      if (key === 'TAHAP1_SELESAI' && value) {
+        TAHAP1_SELESAI = String(value).slice(0, 10);
+      }
+      if (key === 'TAHAP2_MULAI' && value) {
+        TAHAP2_MULAI = String(value).slice(0, 10);
+      }
+      if (key === 'TAHAP2_SELESAI' && value) {
+        TAHAP2_SELESAI = String(value).slice(0, 10);
       }
       if (key === 'KUOTA_TERISI' && value !== '') {
         KUOTA_TERISI = Number(value);
