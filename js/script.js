@@ -94,6 +94,14 @@ if (formDaftar) {
   formDaftar.addEventListener('submit', function (e) {
     e.preventDefault();
 
+    // Honeypot sederhana untuk bot dan jeda antarpengiriman dari perangkat yang sama.
+    if (formDaftar.elements.website && formDaftar.elements.website.value) return;
+    const lastSubmit = Number(localStorage.getItem('ppdb_last_submit') || 0);
+    if (Date.now() - lastSubmit < 60000) {
+      showStatus('error', 'Mohon tunggu satu menit sebelum mengirim formulir kembali.');
+      return;
+    }
+
     if (SCRIPT_URL.includes("PASTE_URL_GOOGLE_APPS_SCRIPT_DI_SINI")) {
       showStatus('error', 'Backend belum terhubung. Admin: silakan ikuti panduan di README.md untuk menghubungkan Google Sheet.');
       return;
@@ -111,6 +119,7 @@ if (formDaftar) {
         // Google Apps Script Web App tidak selalu mengizinkan pembacaan
         // response (CORS), jadi kita anggap sukses jika tidak ada error jaringan.
         showStatus('success', 'Alhamdulillah, pendaftaran terkirim! Admin kami akan menghubungi Anda via WhatsApp.');
+        localStorage.setItem('ppdb_last_submit', String(Date.now()));
         formDaftar.reset();
       })
       .catch(() => {
@@ -142,7 +151,7 @@ const STATIC_GALLERY = {
 };
 
 const FOLDER_ORDER = ['Gedung', 'Kegiatan', 'Asrama', 'Pembangunan'];
-const FOLDER_ICONS = { 'Gedung': '🏢', 'Kegiatan': '📸', 'Asrama': '🛏️', 'Pembangunan': '🏗️' };
+const FOLDER_ICONS = { 'Gedung': '01', 'Kegiatan': '02', 'Asrama': '03', 'Pembangunan': '04' };
 
 let CURRENT_GALLERY_GROUPS = STATIC_GALLERY;
 
@@ -408,13 +417,13 @@ function renderCountdown() {
   const diffDays = (target) => Math.ceil((target - now) / (1000 * 60 * 60 * 24));
 
   if (now < t1Mulai) {
-    el.textContent = `⏳ Pendaftaran Tahap 1 dibuka mulai ${t1Mulai.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })} — siapkan berkasnya dari sekarang!`;
+    el.textContent = `Pendaftaran Tahap 1 dibuka mulai ${t1Mulai.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })} — siapkan berkasnya dari sekarang!`;
   } else if (now >= t1Mulai && now <= t1Selesai) {
-    el.textContent = `⏳ Pendaftaran Tahap 1 ditutup dalam ${diffDays(t1Selesai)} hari lagi — daftarkan putri Anda sekarang!`;
+    el.textContent = `Pendaftaran Tahap 1 ditutup dalam ${diffDays(t1Selesai)} hari lagi — daftarkan putri Anda sekarang!`;
   } else if (now > t1Selesai && now < t2Mulai) {
     el.textContent = `Tahap 1 sudah ditutup. Pendaftaran Tahap 2 dibuka mulai ${t2Mulai.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })}.`;
   } else if (now >= t2Mulai && now <= t2Selesai) {
-    el.textContent = `⏳ Pendaftaran Tahap 2 ditutup dalam ${diffDays(t2Selesai)} hari lagi — daftarkan putri Anda sekarang!`;
+    el.textContent = `Pendaftaran Tahap 2 ditutup dalam ${diffDays(t2Selesai)} hari lagi — daftarkan putri Anda sekarang!`;
   } else {
     el.textContent = `Pendaftaran gelombang ini sudah ditutup. Hubungi admin untuk info gelombang berikutnya.`;
   }
@@ -689,6 +698,7 @@ const btnMinat = document.getElementById('btnMinat');
 if (formMinat) {
   formMinat.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (formMinat.elements.website && formMinat.elements.website.value) return;
 
     if (SCRIPT_URL.includes("PASTE_URL_GOOGLE_APPS_SCRIPT_DI_SINI")) {
       showMinatStatus('error', 'Backend belum terhubung.');
