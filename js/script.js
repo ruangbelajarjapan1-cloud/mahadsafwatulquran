@@ -153,7 +153,7 @@ const STATIC_GALLERY = {
 const FOLDER_ORDER = ['Gedung', 'Kegiatan', 'Asrama', 'Pembangunan'];
 const FOLDER_COVERS = {
   'Gedung': 'assets/galeri/gedung-mahad-siang.jpeg',
-  'Kegiatan': 'assets/galeri/kegiatan-pembekalan.jpeg',
+  'Kegiatan': 'assets/galeri/kitab-3.jpeg',
   'Asrama': 'assets/galeri/ruang-kelas.jpeg',
   'Pembangunan': 'assets/galeri/gedung-mahad-malam.jpeg'
 };
@@ -195,7 +195,9 @@ function renderGalleryFolders(groups) {
     const button = [...wrap.querySelectorAll('.gallery-folder')].find(el => el.dataset.category === kat);
     if (!button) return;
     const firstPhoto = groups[kat].find(item => item.Gambar && item.Gambar.trim());
-    const cover = firstPhoto ? firstPhoto.Gambar.trim() : (FOLDER_COVERS[kat] || FOLDER_COVERS.Gedung);
+    // Kategori utama memakai cover lokal terkurasi agar foto orang tidak muncul sebagai sampul.
+    // Foto pertama dari Sheet hanya dipakai untuk kategori tambahan yang belum memiliki cover tetap.
+    const cover = FOLDER_COVERS[kat] || (firstPhoto ? firstPhoto.Gambar.trim() : FOLDER_COVERS.Gedung);
     button.style.backgroundImage = `url("${cover.replace(/"/g, '%22')}")`;
   });
 }
