@@ -43,6 +43,8 @@
   .guide-step p,.guide-step li{font-size:13px; color:var(--text-soft);}
   .guide-step ul{list-style:disc; padding-left:18px; margin-top:8px;}
   .guide-step li{margin-bottom:5px;}
+  .guide-step code{background:var(--bg-soft); color:var(--sky-dark); padding:2px 6px; border-radius:6px; font-size:11.5px;}
+  .sheet-format-note{margin-top:10px; font-weight:600; color:var(--sky-dark)!important;}
   .admin-warning{background:#fff8e7; border:1px solid #f2d486; color:#725719;}
   .mini-label{display:inline-block; font-size:11px; font-weight:700; color:var(--sky-dark); margin-bottom:5px;}
 </style>
@@ -52,7 +54,7 @@
 <header class="navbar">
   <div class="container navbar-inner">
     <a href="index.html" class="brand">
-      <img src="assets/logo.png" class="brand-logo" alt="Logo Ma'had Shafwatul Qur'an">
+      <img src="assets/logo-web.png" class="brand-logo" width="42" height="76" alt="Logo Ma'had Shafwatul Qur'an">
       Shafwatul Qur'an — Admin
     </a>
     <nav class="nav-links" id="navLinks">
@@ -73,11 +75,18 @@
 
   <div class="admin-group">
     <h3>🔐 Akses Data Admin</h3>
+    <a class="admin-link" href="https://docs.google.com/spreadsheets/d/1v2jMro90-PH40YLaDAklNztoQG2tGO8xueuzba2V2X4/edit" target="_blank" rel="noopener">
+      <div class="txt"><strong>Buka Konten Website Ma'had</strong><span>Artikel, Galeri, Pengaturan, Kalender, dan Instagram</span></div>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="admin-link" href="https://docs.google.com/spreadsheets/d/1kNFZeyavvzuOtfHVrVRq5OvloAMUYNsZMxgnqMAAv3A/edit" target="_blank" rel="noopener">
+      <div class="txt"><strong>Buka Pendaftaran Santri Baru</strong><span>Data calon santriwati yang mengisi formulir website</span></div>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
     <div class="admin-note admin-warning">
-      <strong>Akses dilindungi melalui akun Google resmi ma'had.</strong><br>
-      Buka Google Drive menggunakan akun admin yang telah diberi izin, kemudian pilih
-      <strong>Spreadsheet Konten Website</strong> atau <strong>Spreadsheet Pendaftaran Santriwati</strong>.
-      Jangan membagikan tautan atau memberikan akses kepada akun yang tidak berkepentingan.
+      <strong>Akses perubahan tetap dilindungi oleh izin Google.</strong><br>
+      Pastikan hanya akun admin resmi yang diberi akses <strong>Editor</strong>. Jangan mengubah pengaturan menjadi
+      “Siapa saja yang memiliki link dapat mengedit” dan jangan membagikan tautan kepada pihak yang tidak berkepentingan.
     </div>
   </div>
 
@@ -94,11 +103,13 @@
         <h4>Edit data pada baris yang sudah tersedia</h4>
         <p>Pilih tab sesuai kebutuhan, lalu ubah isi sel tanpa mengganti nama tab maupun judul kolom.</p>
         <ul>
-          <li><strong>Artikel:</strong> judul, ringkasan, tautan, tanggal, dan status tampil.</li>
-          <li><strong>Galeri:</strong> kategori, judul foto, dan URL gambar.</li>
-          <li><strong>Pengaturan:</strong> tanggal pendaftaran, kuota, serta progres donasi.</li>
-          <li><strong>Kalender:</strong> tanggal dan nama agenda ma'had.</li>
+          <li><strong>Artikel:</strong> <code>Tanggal | Kategori | Judul | Ringkasan | Link</code></li>
+          <li><strong>Galeri:</strong> <code>Nama | Kategori | Gambar</code></li>
+          <li><strong>Pengaturan:</strong> <code>Key | Value</code></li>
+          <li><strong>Kalender:</strong> <code>Tanggal | Judul</code></li>
+          <li><strong>Instagram:</strong> <code>URL</code></li>
         </ul>
+        <p class="sheet-format-note">Nama tab, urutan kolom, dan tulisan pada baris judul harus sama persis agar website dapat membaca datanya.</p>
       </article>
       <article class="guide-step">
         <span class="mini-label">PENDAFTARAN</span>
@@ -121,6 +132,7 @@
         <ul>
           <li>Jangan menghapus tab, kolom, atau baris judul.</li>
           <li>Jangan mengubah URL Google Sheet atau akses publik tanpa koordinasi.</li>
+          <li>Google Apps Script harus memvalidasi field, menolak honeypot, dan membatasi pengiriman berulang; perubahan bagian ini dilakukan oleh pengelola teknis.</li>
           <li>Jangan menempel data pribadi santriwati di grup atau media sosial.</li>
           <li>Jika terjadi kesalahan, tekan <strong>Ctrl + Z</strong> atau buka <strong>File → Histori versi</strong> di Google Sheets.</li>
         </ul>

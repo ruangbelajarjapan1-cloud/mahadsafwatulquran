@@ -2,6 +2,23 @@
    MA'HAD SAFWATUL QUR'AN — SCRIPT.JS
    ============================================ */
 
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, char => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+  })[char]);
+}
+
+function safeUrl(value, allowedHosts = []) {
+  try {
+    const url = new URL(String(value || ''), window.location.origin);
+    if (!['http:', 'https:'].includes(url.protocol)) return '';
+    if (allowedHosts.length && !allowedHosts.some(host => url.hostname === host || url.hostname.endsWith('.' + host))) return '';
+    return url.href;
+  } catch (err) {
+    return '';
+  }
+}
+
 /* ---------- 1. Menu Hamburger (Mobile) ---------- */
 const hamburgerBtn = document.getElementById('hamburgerBtn');
 const navLinks = document.getElementById('navLinks');
@@ -152,10 +169,10 @@ const STATIC_GALLERY = {
 
 const FOLDER_ORDER = ['Gedung', 'Kegiatan', 'Asrama', 'Pembangunan'];
 const FOLDER_COVERS = {
-  'Gedung': 'assets/galeri/gedung-mahad-siang.jpeg',
-  'Kegiatan': 'assets/galeri/kitab-3.jpeg',
-  'Asrama': 'assets/galeri/ruang-kelas.jpeg',
-  'Pembangunan': 'assets/galeri/gedung-mahad-malam.jpeg'
+  'Gedung': 'assets/galeri/gedung-mahad-siang.webp',
+  'Kegiatan': 'assets/galeri/kitab-3.webp',
+  'Asrama': 'assets/galeri/ruang-kelas.webp',
+  'Pembangunan': 'assets/galeri/gedung-mahad-malam.webp'
 };
 
 let CURRENT_GALLERY_GROUPS = STATIC_GALLERY;
@@ -182,10 +199,10 @@ function renderGalleryFolders(groups) {
     const items = groups[kat];
     const cls = FOLDER_STYLES[kat] || FALLBACK_STYLES[i % FALLBACK_STYLES.length];
     return `
-      <button type="button" class="gallery-folder ${cls}" data-category="${kat}" aria-label="Buka galeri ${kat}, ${items.length} foto">
+      <button type="button" class="gallery-folder ${cls}" data-category="${escapeHTML(kat)}" aria-label="Buka galeri ${escapeHTML(kat)}, ${items.length} foto">
         <span class="folder-overlay" aria-hidden="true"></span>
         <span class="folder-info">
-          <strong>${kat}</strong>
+          <strong>${escapeHTML(kat)}</strong>
           <span class="folder-meta"><span class="folder-count">${items.length} foto</span><span class="folder-action">Lihat galeri <span aria-hidden="true">→</span></span></span>
         </span>
       </button>`;
@@ -198,7 +215,8 @@ function renderGalleryFolders(groups) {
     // Kategori utama memakai cover lokal terkurasi agar foto orang tidak muncul sebagai sampul.
     // Foto pertama dari Sheet hanya dipakai untuk kategori tambahan yang belum memiliki cover tetap.
     const cover = FOLDER_COVERS[kat] || (firstPhoto ? firstPhoto.Gambar.trim() : FOLDER_COVERS.Gedung);
-    button.style.backgroundImage = `url("${cover.replace(/"/g, '%22')}")`;
+    const safeCover = safeUrl(cover);
+    if (safeCover) button.style.backgroundImage = `url("${safeCover.replace(/"/g, '%22')}")`;
   });
 }
 
@@ -209,6 +227,9 @@ renderGalleryFolders(STATIC_GALLERY);
 /* ---------- 6. Carousel / Lightbox Foto ---------- */
 const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
+lightbox.setAttribute('role', 'dialog');
+lightbox.setAttribute('aria-modal', 'true');
+lightbox.setAttribute('aria-label', 'Penampil foto galeri');
 lightbox.innerHTML = `
   <button class="lightbox-close" aria-label="Tutup">✕</button>
   <button class="lightbox-nav lightbox-prev" aria-label="Sebelumnya">‹</button>
@@ -223,27 +244,32 @@ const lightboxCaption = lightbox.querySelector('.lightbox-caption');
 
 let carouselItems = [];
 let carouselIndex = 0;
+let lastGalleryTrigger = null;
 
 function showCarouselSlide() {
   const item = carouselItems[carouselIndex];
   if (!item) return;
-  const url = item.Gambar || '';
+  const url = safeUrl(item.Gambar || '');
+  if (!url) return;
   lightboxImg.src = url;
   lightboxCaption.textContent = `${item.Nama || ''} — ${carouselIndex + 1}/${carouselItems.length}`;
 }
 
-function openCarousel(category) {
-  const items = (CURRENT_GALLERY_GROUPS[category] || []).filter(i => i.Gambar);
+function openCarousel(category, trigger) {
+  const items = (CURRENT_GALLERY_GROUPS[category] || []).filter(i => safeUrl(i.Gambar));
   if (!items.length) return; // folder ini belum ada foto asli, jangan buka carousel kosong
   carouselItems = items;
   carouselIndex = 0;
   showCarouselSlide();
   lightbox.classList.add('open');
+  lastGalleryTrigger = trigger || null;
   document.body.style.overflow = 'hidden';
+  lightbox.querySelector('.lightbox-close').focus();
 }
 function closeLightbox() {
   lightbox.classList.remove('open');
   document.body.style.overflow = '';
+  if (lastGalleryTrigger) lastGalleryTrigger.focus();
 }
 function nextSlide() {
   carouselIndex = (carouselIndex + 1) % carouselItems.length;
@@ -269,7 +295,7 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('click', (e) => {
   const folder = e.target.closest('.gallery-folder');
   if (!folder) return;
-  openCarousel(folder.dataset.category);
+  openCarousel(folder.dataset.category, folder);
 });
 
 
@@ -321,10 +347,10 @@ async function loadArtikelFromSheet() {
 
     grid.innerHTML = data.map(item => `
       <article class="article-card">
-        <span class="article-tag">${item.Kategori || 'Kabar'}</span>
-        <h4>${item.Judul || ''}</h4>
-        <p>${item.Ringkasan || ''}</p>
-        ${item.Link ? `<a href="${item.Link}" target="_blank" rel="noopener" class="article-link">Baca selengkapnya →</a>` : ''}
+        <span class="article-tag">${escapeHTML(item.Kategori || 'Kabar')}</span>
+        <h4>${escapeHTML(item.Judul || '')}</h4>
+        <p>${escapeHTML(item.Ringkasan || '')}</p>
+        ${safeUrl(item.Link) ? `<a href="${escapeHTML(safeUrl(item.Link))}" target="_blank" rel="noopener" class="article-link">Baca selengkapnya →</a>` : ''}
       </article>
     `).join('');
   } catch (err) {
@@ -376,8 +402,10 @@ async function loadInstagramFromSheet() {
     const data = await fetchSheet('Instagram', ['URL']);
     if (!data.length) return; // sheet kosong -> biarkan fallback statis (tombol ke profil IG)
 
-    grid.innerHTML = data.slice(0, 6).map(item => `
-      <blockquote class="instagram-media" data-instgrm-permalink="${item.URL}" data-instgrm-version="14" style="margin:0;"></blockquote>
+    const instagramItems = data.slice(0, 6).map(item => safeUrl(item.URL, ['instagram.com'])).filter(Boolean);
+    if (!instagramItems.length) return;
+    grid.innerHTML = instagramItems.map(url => `
+      <blockquote class="instagram-media" data-instgrm-permalink="${escapeHTML(url)}" data-instgrm-version="14" style="margin:0;"></blockquote>
     `).join('');
 
     if (window.instgrm) {
@@ -549,7 +577,7 @@ function renderCalendar() {
       grid.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
       el.classList.add('selected');
       const events = KEGIATAN_EVENTS[el.dataset.date] || [];
-      eventPanel.innerHTML = events.map(e => `<div class="cal-event-item">📌 ${e}</div>`).join('');
+      eventPanel.innerHTML = events.map(e => `<div class="cal-event-item">${escapeHTML(e)}</div>`).join('');
     });
   });
 
@@ -568,6 +596,28 @@ if (calPrev && calNext) {
     renderCalendar();
   });
   renderCalendar();
+}
+
+const scheduleToggle = document.getElementById('scheduleToggle');
+const schedule = document.querySelector('.schedule');
+if (scheduleToggle && schedule) {
+  schedule.classList.add('schedule-collapsible');
+  scheduleToggle.addEventListener('click', () => {
+    const expanded = schedule.classList.toggle('expanded');
+    scheduleToggle.setAttribute('aria-expanded', String(expanded));
+    scheduleToggle.textContent = expanded ? 'Tutup Jadwal Lengkap' : 'Lihat Jadwal Lengkap';
+  });
+}
+
+const observedSections = [...document.querySelectorAll('main section[id], body > section[id]')];
+const sectionNavLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+if ('IntersectionObserver' in window && observedSections.length && sectionNavLinks.length) {
+  const navObserver = new IntersectionObserver(entries => {
+    entries.filter(entry => entry.isIntersecting).forEach(entry => {
+      sectionNavLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+    });
+  }, { rootMargin: '-35% 0px -55% 0px' });
+  observedSections.forEach(section => navObserver.observe(section));
 }
 
 
