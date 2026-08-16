@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .admin-wrap{max-width:720px; margin:0 auto; padding:50px 24px 90px;}
+  .admin-wrap{max-width:900px; margin:0 auto; padding:50px 24px 90px;}
   .admin-header{text-align:center; margin-bottom:36px;}
   .admin-group{margin-bottom:34px;}
   .admin-group h3{font-size:15px; color:var(--sky-dark); margin-bottom:14px;}
@@ -28,6 +28,23 @@
     background:var(--bg-soft); border-radius:var(--radius-sm); padding:16px 18px;
     font-size:13px; color:var(--text-soft); margin-top:10px;
   }
+  .admin-guide{display:grid; gap:14px; counter-reset:admin-step;}
+  .guide-step{
+    position:relative; background:var(--white); border:1px solid var(--line);
+    border-radius:var(--radius-sm); padding:18px 18px 18px 58px;
+  }
+  .guide-step::before{
+    counter-increment:admin-step; content:counter(admin-step); position:absolute;
+    left:18px; top:18px; width:28px; height:28px; display:grid; place-items:center;
+    border-radius:50%; background:var(--sky-dark); color:var(--white);
+    font-family:'Baloo 2'; font-weight:700;
+  }
+  .guide-step h4{font-size:15px; margin-bottom:6px;}
+  .guide-step p,.guide-step li{font-size:13px; color:var(--text-soft);}
+  .guide-step ul{list-style:disc; padding-left:18px; margin-top:8px;}
+  .guide-step li{margin-bottom:5px;}
+  .admin-warning{background:#fff8e7; border:1px solid #f2d486; color:#725719;}
+  .mini-label{display:inline-block; font-size:11px; font-weight:700; color:var(--sky-dark); margin-bottom:5px;}
 </style>
 </head>
 <body>
@@ -51,41 +68,66 @@
   <div class="admin-header">
     <p class="eyebrow center">✦ Khusus Pengelola</p>
     <h2 class="center">Panel Admin</h2>
-    <p class="section-desc center" style="margin:10px auto 0">Halaman ini untuk memudahkan admin ma'had — bukan untuk pengunjung umum. Simpan link halaman ini (tidak muncul di menu utama website).</p>
+    <p class="section-desc center" style="margin:10px auto 0">Panduan kerja khusus pengelola. Tautan data operasional tidak disimpan di website publik demi keamanan data santriwati.</p>
   </div>
 
   <div class="admin-group">
-    <h3>📊 Kelola Konten Website</h3>
-    <a class="admin-link" href="https://docs.google.com/spreadsheets/d/1v2jMro90-PH40YLaDAklNztoQG2tGO8xueuzba2V2X4/edit" target="_blank" rel="noopener">
-      <div class="txt"><strong>Buka Spreadsheet Konten</strong><span>Isi tab Artikel, Galeri, Pengaturan (countdown/kuota), &amp; Kalender</span></div>
-      <span class="arrow">→</span>
-    </a>
-    <div class="admin-note">
-      💡 Cukup edit di sini, website otomatis update — tidak perlu sentuh kode apapun.<br>
-      Tab yang tersedia: <strong>Artikel</strong>, <strong>Galeri</strong>, <strong>Pengaturan</strong>, <strong>Kalender</strong>.
-      Format tiap tab ada di README.md bagian panduan.
+    <h3>🔐 Akses Data Admin</h3>
+    <div class="admin-note admin-warning">
+      <strong>Akses dilindungi melalui akun Google resmi ma'had.</strong><br>
+      Buka Google Drive menggunakan akun admin yang telah diberi izin, kemudian pilih
+      <strong>Spreadsheet Konten Website</strong> atau <strong>Spreadsheet Pendaftaran Santriwati</strong>.
+      Jangan membagikan tautan atau memberikan akses kepada akun yang tidak berkepentingan.
     </div>
   </div>
 
-  <div class="admin-group">
-    <h3>📝 Kelola Pendaftaran Santriwati</h3>
-    <a class="admin-link" href="https://docs.google.com/spreadsheets/d/1kNFZeyavvzuOtfHVrVRq5OvloAMUYNsZMxgnqMAAv3A/edit" target="_blank" rel="noopener">
-      <div class="txt"><strong>Buka Spreadsheet Pendaftaran</strong><span>Daftar santriwati yang sudah mengisi form di website</span></div>
-      <span class="arrow">→</span>
-    </a>
+  <div class="admin-group" id="panduan">
+    <h3>📘 Panduan Penggunaan untuk Admin</h3>
+    <div class="admin-guide">
+      <article class="guide-step">
+        <span class="mini-label">SEBELUM MULAI</span>
+        <h4>Masuk dengan akun Google resmi ma'had</h4>
+        <p>Buka Google Drive melalui akun resmi ma'had, kemudian pilih spreadsheet yang ingin dikelola. Jika muncul permintaan akses, periksa kembali akun Google yang sedang aktif.</p>
+      </article>
+      <article class="guide-step">
+        <span class="mini-label">KONTEN WEBSITE</span>
+        <h4>Edit data pada baris yang sudah tersedia</h4>
+        <p>Pilih tab sesuai kebutuhan, lalu ubah isi sel tanpa mengganti nama tab maupun judul kolom.</p>
+        <ul>
+          <li><strong>Artikel:</strong> judul, ringkasan, tautan, tanggal, dan status tampil.</li>
+          <li><strong>Galeri:</strong> kategori, judul foto, dan URL gambar.</li>
+          <li><strong>Pengaturan:</strong> tanggal pendaftaran, kuota, serta progres donasi.</li>
+          <li><strong>Kalender:</strong> tanggal dan nama agenda ma'had.</li>
+        </ul>
+      </article>
+      <article class="guide-step">
+        <span class="mini-label">PENDAFTARAN</span>
+        <h4>Periksa calon santriwati yang baru masuk</h4>
+        <p>Buka Spreadsheet Pendaftaran, urutkan dari data terbaru, periksa kelengkapan nama, wali, WhatsApp, alamat, dan jenjang. Hubungi wali melalui nomor WhatsApp yang tercatat.</p>
+      </article>
+      <article class="guide-step">
+        <span class="mini-label">TINDAK LANJUT</span>
+        <h4>Gunakan status kerja yang konsisten</h4>
+        <p>Jika spreadsheet menyediakan kolom status, gunakan urutan sederhana: <strong>Baru → Sudah Dihubungi → Berkas Lengkap → Seleksi → Diterima/Tidak Diterima</strong>. Jangan menghapus data pendaftar; ubah statusnya agar riwayat tetap tersimpan.</p>
+      </article>
+      <article class="guide-step">
+        <span class="mini-label">PENGECEKAN</span>
+        <h4>Pastikan perubahan sudah tampil di website</h4>
+        <p>Setelah mengedit, tunggu 1–5 menit lalu buka website dan muat ulang. Di komputer tekan <strong>Ctrl + F5</strong>; di ponsel tutup lalu buka kembali halaman. Periksa juga tampilan pada ponsel.</p>
+      </article>
+      <article class="guide-step admin-warning">
+        <span class="mini-label">PENTING</span>
+        <h4>Hindari perubahan yang berisiko merusak website</h4>
+        <ul>
+          <li>Jangan menghapus tab, kolom, atau baris judul.</li>
+          <li>Jangan mengubah URL Google Sheet atau akses publik tanpa koordinasi.</li>
+          <li>Jangan menempel data pribadi santriwati di grup atau media sosial.</li>
+          <li>Jika terjadi kesalahan, tekan <strong>Ctrl + Z</strong> atau buka <strong>File → Histori versi</strong> di Google Sheets.</li>
+        </ul>
+      </article>
+    </div>
   </div>
 
-  <div class="admin-group">
-    <h3>💬 Kontak Cepat</h3>
-    <a class="admin-link" href="https://wa.me/628978842802?text=Assalamu%27alaikum%2C%20saya%20ingin%20bertanya%20seputar%20Ma%27had%20Shafwatul%20Qur%27an." target="_blank" rel="noopener">
-      <div class="txt"><strong>WhatsApp Admin</strong><span>Nomor yang tampil di website</span></div>
-      <span class="arrow">→</span>
-    </a>
-    <a class="admin-link" href="https://instagram.com/shafwatulquran" target="_blank" rel="noopener">
-      <div class="txt"><strong>Instagram Ma'had</strong><span>@shafwatulquran</span></div>
-      <span class="arrow">→</span>
-    </a>
-  </div>
 </div>
 
 <script src="js/script.js"></script>
