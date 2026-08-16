@@ -151,7 +151,12 @@ const STATIC_GALLERY = {
 };
 
 const FOLDER_ORDER = ['Gedung', 'Kegiatan', 'Asrama', 'Pembangunan'];
-const FOLDER_ICONS = { 'Gedung': '01', 'Kegiatan': '02', 'Asrama': '03', 'Pembangunan': '04' };
+const FOLDER_COVERS = {
+  'Gedung': 'assets/galeri/gedung-mahad-siang.jpeg',
+  'Kegiatan': 'assets/galeri/kegiatan-pembekalan.jpeg',
+  'Asrama': 'assets/galeri/ruang-kelas.jpeg',
+  'Pembangunan': 'assets/galeri/gedung-mahad-malam.jpeg'
+};
 
 let CURRENT_GALLERY_GROUPS = STATIC_GALLERY;
 
@@ -175,20 +180,24 @@ function renderGalleryFolders(groups) {
 
   wrap.innerHTML = keys.map((kat, i) => {
     const items = groups[kat];
-    const icon = FOLDER_ICONS[kat] || '✦';
     const cls = FOLDER_STYLES[kat] || FALLBACK_STYLES[i % FALLBACK_STYLES.length];
     return `
-      <button type="button" class="gallery-folder ${cls}" data-category="${kat}">
-        <span class="folder-ornament" aria-hidden="true">
-          <svg viewBox="0 0 100 100"><polygon points="50,6 60,38 92,38 66,58 76,90 50,70 24,90 34,58 8,38 40,38"/></svg>
-        </span>
-        <span class="folder-icon">${icon}</span>
+      <button type="button" class="gallery-folder ${cls}" data-category="${kat}" aria-label="Buka galeri ${kat}, ${items.length} foto">
+        <span class="folder-overlay" aria-hidden="true"></span>
         <span class="folder-info">
           <strong>${kat}</strong>
-          <span class="folder-count">${items.length} foto</span>
+          <span class="folder-meta"><span class="folder-count">${items.length} foto</span><span class="folder-action">Lihat galeri <span aria-hidden="true">→</span></span></span>
         </span>
       </button>`;
   }).join('');
+
+  keys.forEach(kat => {
+    const button = [...wrap.querySelectorAll('.gallery-folder')].find(el => el.dataset.category === kat);
+    if (!button) return;
+    const firstPhoto = groups[kat].find(item => item.Gambar && item.Gambar.trim());
+    const cover = firstPhoto ? firstPhoto.Gambar.trim() : (FOLDER_COVERS[kat] || FOLDER_COVERS.Gedung);
+    button.style.backgroundImage = `url("${cover.replace(/"/g, '%22')}")`;
+  });
 }
 
 // Render tampilan awal (statis) begitu halaman dimuat, sebelum Sheet selesai diambil
