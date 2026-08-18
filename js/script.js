@@ -792,3 +792,41 @@ function showMinatStatus(type, message) {
   minatStatus.style.maxWidth = '900px';
   minatStatus.style.margin = '16px auto 0';
 }
+
+
+/* ============================================
+   13. TOMBOL KEMBALI KE ATAS
+   ============================================ */
+const backToTop = document.createElement('button');
+backToTop.type = 'button';
+backToTop.className = 'back-to-top';
+backToTop.setAttribute('aria-label', 'Kembali ke atas');
+backToTop.setAttribute('title', 'Kembali ke atas');
+backToTop.innerHTML = `
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M6 14.5 12 8l6 6.5" />
+  </svg>
+  <span>Kembali ke atas</span>
+`;
+document.body.appendChild(backToTop);
+
+let backToTopTicking = false;
+
+function updateBackToTop() {
+  backToTop.classList.toggle('is-visible', window.scrollY > 500);
+  backToTopTicking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!backToTopTicking) {
+    window.requestAnimationFrame(updateBackToTop);
+    backToTopTicking = true;
+  }
+}, { passive: true });
+
+backToTop.addEventListener('click', () => {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+});
+
+updateBackToTop();
