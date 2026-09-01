@@ -830,3 +830,89 @@ backToTop.addEventListener('click', () => {
 });
 
 updateBackToTop();
+
+
+/* ============================================
+   14. POPUP PENGUMUMAN PPDB 2027/2028
+   ============================================ */
+const ppdbAnnouncement = document.getElementById('ppdbAnnouncement');
+const ppdbAnnouncementClose = document.getElementById('ppdbAnnouncementClose');
+const ppdbAnnouncementTrigger = document.getElementById('ppdbAnnouncementTrigger');
+const ppdbAnnouncementRegister = document.getElementById('ppdbAnnouncementRegister');
+const ppdbAnnouncementDetail = document.getElementById('ppdbAnnouncementDetail');
+const ppdbAnnouncementImage = document.getElementById('ppdbAnnouncementImage');
+
+if (ppdbAnnouncement) {
+  const announcementStorageKey = 'sq_ppdb_2027_announcement_seen_at';
+  const announcementInterval = 24 * 60 * 60 * 1000;
+  const compactPoster = 'assets/ppdb-2027-ringkas.webp';
+  const completePoster = 'assets/ppdb-2027-lengkap.webp';
+  let announcementTimer;
+
+  function markAnnouncementSeen() {
+    try {
+      localStorage.setItem(announcementStorageKey, String(Date.now()));
+    } catch (err) {
+      // Popup tetap berfungsi apabila penyimpanan browser tidak tersedia.
+    }
+  }
+
+  function wasAnnouncementSeenRecently() {
+    try {
+      const lastSeen = Number(localStorage.getItem(announcementStorageKey) || 0);
+      return Date.now() - lastSeen < announcementInterval;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function resetAnnouncementPoster() {
+    if (!ppdbAnnouncementImage || !ppdbAnnouncementDetail) return;
+    ppdbAnnouncementImage.src = compactPoster;
+    ppdbAnnouncementImage.alt = "Penerimaan Santri Baru Ma'had Shafwatul Qur'an Tahun Ajaran 2027–2028";
+    ppdbAnnouncementDetail.textContent = 'Lihat Informasi Lengkap';
+    ppdbAnnouncementDetail.setAttribute('aria-pressed', 'false');
+  }
+
+  function openAnnouncement() {
+    clearTimeout(announcementTimer);
+    resetAnnouncementPoster();
+    if (typeof ppdbAnnouncement.showModal === 'function') {
+      ppdbAnnouncement.showModal();
+      document.body.classList.add('ppdb-modal-open');
+    }
+  }
+
+  function closeAnnouncement() {
+    if (ppdbAnnouncement.open) ppdbAnnouncement.close();
+  }
+
+  ppdbAnnouncementClose?.addEventListener('click', closeAnnouncement);
+  ppdbAnnouncementTrigger?.addEventListener('click', openAnnouncement);
+  ppdbAnnouncementRegister?.addEventListener('click', closeAnnouncement);
+
+  ppdbAnnouncementDetail?.addEventListener('click', () => {
+    const showComplete = ppdbAnnouncementDetail.getAttribute('aria-pressed') !== 'true';
+    ppdbAnnouncementImage.src = showComplete ? completePoster : compactPoster;
+    ppdbAnnouncementImage.alt = showComplete
+      ? "Informasi lengkap Penerimaan Santri Baru Ma'had Shafwatul Qur'an Tahun Ajaran 2027–2028"
+      : "Penerimaan Santri Baru Ma'had Shafwatul Qur'an Tahun Ajaran 2027–2028";
+    ppdbAnnouncementDetail.textContent = showComplete ? 'Kembali ke Poster Ringkas' : 'Lihat Informasi Lengkap';
+    ppdbAnnouncementDetail.setAttribute('aria-pressed', String(showComplete));
+    ppdbAnnouncementImage.scrollIntoView({ block: 'nearest' });
+  });
+
+  ppdbAnnouncement.addEventListener('click', event => {
+    if (event.target === ppdbAnnouncement) closeAnnouncement();
+  });
+
+  ppdbAnnouncement.addEventListener('close', () => {
+    document.body.classList.remove('ppdb-modal-open');
+    markAnnouncementSeen();
+    ppdbAnnouncementTrigger?.focus({ preventScroll: true });
+  });
+
+  if (!wasAnnouncementSeenRecently()) {
+    announcementTimer = window.setTimeout(openAnnouncement, 2200);
+  }
+}
