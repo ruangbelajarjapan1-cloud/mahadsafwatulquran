@@ -926,8 +926,11 @@ h1,h2,h3,h4,h5,.brand,.btn,.eyebrow{font-family:'Plus Jakarta Sans',sans-serif;}
 body.ppdb-modal-open{overflow:hidden;}
 
 .ppdb-announcement{
+  position:fixed;
+  inset:0;
   width:min(960px,calc(100% - 32px));
   max-height:calc(100dvh - 32px);
+  margin:auto;
   padding:0;
   border:0;
   border-radius:24px;
