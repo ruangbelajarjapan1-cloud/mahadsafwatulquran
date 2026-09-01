@@ -919,3 +919,94 @@ h1,h2,h3,h4,h5,.brand,.btn,.eyebrow{font-family:'Plus Jakarta Sans',sans-serif;}
 @media (prefers-reduced-motion:reduce){
   .back-to-top{transition:none;}
 }
+
+/* ============================================
+   POPUP PENGUMUMAN PPDB 2027/2028
+   ============================================ */
+body.ppdb-modal-open{overflow:hidden;}
+
+.ppdb-announcement{
+  width:min(960px,calc(100% - 32px));
+  max-height:calc(100dvh - 32px);
+  padding:0;
+  border:0;
+  border-radius:24px;
+  background:#fff;
+  color:var(--text);
+  box-shadow:0 30px 90px rgba(5,32,49,.34);
+  overflow:hidden;
+}
+.ppdb-announcement::backdrop{
+  background:rgba(4,25,38,.76);
+  backdrop-filter:blur(5px);
+}
+.ppdb-announcement-card{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(300px,.82fr) minmax(350px,1fr);
+  max-height:calc(100dvh - 32px);
+  overflow:auto;
+}
+.ppdb-announcement-close{
+  position:absolute;
+  top:14px;
+  right:14px;
+  z-index:2;
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:50%;
+  background:rgba(8,41,61,.9);
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
+}
+.ppdb-announcement-close svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+.ppdb-announcement-close:focus-visible,.ppdb-announcement-trigger:focus-visible,.ppdb-detail-button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px;}
+.ppdb-announcement-media{min-height:560px;background:#0d5276;}
+.ppdb-announcement-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top;}
+.ppdb-announcement-content{align-self:center;padding:56px 48px 48px;}
+.ppdb-announcement-label{margin-bottom:10px;color:var(--sky-dark);font-size:12px;font-weight:800;letter-spacing:.16em;}
+.ppdb-announcement-content h2{margin-bottom:16px;color:#123b56;font-size:clamp(28px,3vw,40px);line-height:1.15;letter-spacing:-.035em;}
+.ppdb-announcement-content>p:not(.ppdb-announcement-label):not(.ppdb-announcement-note){color:var(--text-soft);font-size:16px;}
+.ppdb-announcement-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;}
+.ppdb-announcement-actions .btn{justify-content:center;}
+.ppdb-detail-button{border:1px solid #b9ccd8;background:#fff;color:#174e6e;cursor:pointer;}
+.ppdb-detail-button:hover{border-color:var(--sky-dark);background:#eef6fb;}
+.ppdb-announcement-note{margin-top:16px;color:var(--text-soft);font-size:12px;line-height:1.6;}
+.ppdb-announcement-trigger{
+  flex:0 0 auto;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:999px;
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  font:inherit;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.02em;
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease;
+}
+.ppdb-announcement-trigger:hover{background:rgba(255,255,255,.24);border-color:#fff;}
+
+@media (max-width:720px){
+  .ppdb-announcement{width:min(100% - 18px,480px);max-height:calc(100dvh - 18px);border-radius:18px;}
+  .ppdb-announcement-card{display:block;max-height:calc(100dvh - 18px);}
+  .ppdb-announcement-media{min-height:0;max-height:46dvh;}
+  .ppdb-announcement-media img{height:auto;max-height:46dvh;object-fit:contain;background:#0d5276;}
+  .ppdb-announcement-content{padding:25px 22px 26px;}
+  .ppdb-announcement-content h2{font-size:25px;}
+  .ppdb-announcement-content>p:not(.ppdb-announcement-label):not(.ppdb-announcement-note){font-size:14px;}
+  .ppdb-announcement-actions{display:grid;margin-top:20px;}
+  .ppdb-announcement-actions .btn{width:100%;}
+  .ppdb-announcement-note{margin-bottom:0;}
+  .ppdb-announcement-trigger{order:3;margin-left:auto;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ppdb-announcement-trigger{transition:none;}
+}

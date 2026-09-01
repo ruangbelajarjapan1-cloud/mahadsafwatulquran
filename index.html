@@ -43,6 +43,31 @@
 </head>
 <body>
 
+<!-- ================= PENGUMUMAN PPDB 2027/2028 ================= -->
+<dialog class="ppdb-announcement" id="ppdbAnnouncement" aria-labelledby="ppdbAnnouncementTitle">
+  <div class="ppdb-announcement-card">
+    <button class="ppdb-announcement-close" id="ppdbAnnouncementClose" type="button" aria-label="Tutup pengumuman PPDB">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+
+    <div class="ppdb-announcement-media">
+      <img id="ppdbAnnouncementImage" src="assets/ppdb-2027-ringkas.webp" width="1080" height="1350" alt="Penerimaan Santri Baru Ma'had Shafwatul Qur'an Tahun Ajaran 2027–2028">
+    </div>
+
+    <div class="ppdb-announcement-content">
+      <p class="ppdb-announcement-label">PENERIMAAN SANTRI BARU</p>
+      <h2 id="ppdbAnnouncementTitle">PPDB 2027–2028 Telah Dibuka</h2>
+      <p>SMP Tahfizh Al-Qur'an khusus putri dengan kuota terbatas untuk 25 santriwati.</p>
+
+      <div class="ppdb-announcement-actions">
+        <a href="#pendaftaran" class="btn btn-primary" id="ppdbAnnouncementRegister">Daftar Sekarang</a>
+        <button class="btn ppdb-detail-button" id="ppdbAnnouncementDetail" type="button" aria-pressed="false">Lihat Informasi Lengkap</button>
+      </div>
+      <p class="ppdb-announcement-note">Poster lengkap memuat program, biaya, jadwal pendaftaran, alamat, dan kontak resmi.</p>
+    </div>
+  </div>
+</dialog>
+
 <!-- ================= NAVBAR ================= -->
 <header class="navbar" id="navbar">
   <div class="container navbar-inner">
@@ -73,6 +98,7 @@
 <div class="urgency-banner">
   <div class="container urgency-inner">
     <span id="countdownText">Memuat informasi gelombang pendaftaran...</span>
+    <button class="ppdb-announcement-trigger" id="ppdbAnnouncementTrigger" type="button">Info PPDB 2027–2028</button>
     <div class="kuota-wrap">
       <div class="kuota-track"><div class="kuota-fill" id="kuotaBar"></div></div>
       <span class="kuota-label" id="kuotaLabel"></span>
