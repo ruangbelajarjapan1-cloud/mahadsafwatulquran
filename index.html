@@ -62,6 +62,7 @@
       <div class="ppdb-announcement-actions">
         <a href="#pendaftaran" class="btn btn-primary" id="ppdbAnnouncementRegister">Daftar Sekarang</a>
         <button class="btn ppdb-detail-button" id="ppdbAnnouncementDetail" type="button" aria-pressed="false">Lihat Informasi Lengkap</button>
+        <a href="ppdb.html" class="ppdb-announcement-page-link">Buka halaman PPDB</a>
       </div>
       <p class="ppdb-announcement-note">Poster lengkap memuat program, biaya, jadwal pendaftaran, alamat, dan kontak resmi.</p>
     </div>
@@ -411,6 +412,23 @@
     <h2 class="center light">Daftarkan Putri Anda — Angkatan Kedua</h2>
     <p class="section-desc center light">Isi form di bawah ini. Admin kami akan menghubungi Anda melalui WhatsApp untuk proses selanjutnya.</p>
 
+    <article class="ppdb-poster-card" aria-labelledby="ppdbPosterTitle">
+      <a class="ppdb-poster-preview" href="ppdb.html" aria-label="Buka informasi lengkap PPDB 2027–2028">
+        <img src="assets/ppdb-2027-ringkas.webp" width="1080" height="1350" loading="lazy" alt="Poster Penerimaan Santri Baru Ma'had Shafwatul Qur'an Tahun Ajaran 2027–2028">
+      </a>
+      <div class="ppdb-poster-copy">
+        <p class="ppdb-poster-kicker">INFORMASI PPDB 2027–2028</p>
+        <h3 id="ppdbPosterTitle">Poster Penerimaan Santri Baru</h3>
+        <p>Lihat poster resmi dalam ukuran penuh, unduh untuk disimpan, atau bagikan kepada keluarga dan kerabat.</p>
+        <div class="ppdb-poster-actions">
+          <a href="ppdb.html" class="btn btn-primary">Lihat Poster Lengkap</a>
+          <a href="assets/ppdb-2027-lengkap.webp" download="PPDB-Mahad-Shafwatul-Quran-2027-2028.webp" class="btn ppdb-secondary-button">Unduh Poster</a>
+          <button type="button" class="btn ppdb-secondary-button" data-share-ppdb>Bagikan</button>
+        </div>
+        <p class="ppdb-share-status" data-share-status role="status" aria-live="polite"></p>
+      </div>
+    </article>
+
     <div class="ppdb-flow" aria-label="Alur penerimaan santriwati baru">
       <div class="flow-item"><span>01</span><strong>Isi Form</strong><small>Lengkapi data awal</small></div>
       <div class="flow-item"><span>02</span><strong>Verifikasi</strong><small>Dihubungi admin</small></div>
@@ -653,5 +671,6 @@
 </div>
 
 <script src="js/script.js"></script>
+<script src="js/ppdb.js"></script>
 </body>
 </html>
