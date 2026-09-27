@@ -105,11 +105,13 @@
         <ul>
           <li><strong>Artikel:</strong> <code>Tanggal | Kategori | Judul | Ringkasan | Link</code></li>
           <li><strong>Galeri:</strong> <code>Nama | Kategori | Gambar</code></li>
-          <li><strong>Pengaturan:</strong> <code>Key | Value</code></li>
+          <li><strong>Pengaturan:</strong> <code>Key | Value</code> — khusus tanggal (deadline, tahap 1/2)</li>
+          <li><strong>Kuota:</strong> <code>Key | Value</code> — khusus angka: <code>KUOTA_TERISI</code>, <code>KUOTA_TOTAL</code>, <code>DONASI_TERKUMPUL</code>, <code>DONASI_TARGET</code></li>
           <li><strong>Kalender:</strong> <code>Tanggal | Judul</code></li>
           <li><strong>Instagram:</strong> <code>URL</code></li>
         </ul>
         <p class="sheet-format-note">Nama tab, urutan kolom, dan tulisan pada baris judul harus sama persis agar website dapat membaca datanya.</p>
+        <p class="sheet-format-note" style="color:var(--text-soft); font-weight:400;">Kenapa Kuota dipisah dari Pengaturan? Karena satu kolom di Google Sheets hanya bisa dibaca sebagai satu jenis data. Kalau angka kuota digabung sebaris dengan tanggal, angkanya akan terbaca 0 oleh website. Jadi khusus angka (kuota & donasi), selalu isi di tab "Kuota", bukan di tab "Pengaturan".</p>
       </article>
       <article class="guide-step">
         <span class="mini-label">PENDAFTARAN</span>
