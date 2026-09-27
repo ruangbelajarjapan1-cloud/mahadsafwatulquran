@@ -668,6 +668,46 @@ async function loadPengaturanFromSheet() {
       if (key === 'TAHAP2_SELESAI' && value) {
         TAHAP2_SELESAI = String(value).slice(0, 10);
       }
+      // Catatan: KUOTA_TERISI, KUOTA_TOTAL, DONASI_TERKUMPUL & DONASI_TARGET
+      // SENGAJA tidak dibaca di sini lagi. Kolom Value di tab ini campur
+      // tanggal & angka, dan Google Sheets cuma bisa menebak SATU jenis
+      // data per kolom -- akibatnya nilai angka selalu terbaca kosong/0.
+      // Nilai-nilai itu sekarang diambil dari tab terpisah "Kuota" oleh
+      // loadKuotaFromSheet() di bawah, supaya kolomnya isinya angka semua.
+    });
+
+    renderCountdown();
+  } catch (err) {
+    // Tab "Pengaturan" belum ada / gagal dimuat -> pakai nilai cadangan
+  }
+}
+
+/* ============================================
+   8c. AMBIL KUOTA & DONASI DARI TAB "KUOTA" (TERPISAH)
+   ============================================
+   Dipisah dari tab "Pengaturan" karena kolom Value di tab itu
+   campur tanggal & angka -- Google Sheets hanya bisa membaca SATU
+   jenis data per kolom, jadi baris angka (kuota/donasi) selalu
+   terbaca kosong (jadi 0) kalau digabung dengan baris tanggal.
+
+   Tab "Kuota" formatnya sama: kolom Key | Value, contoh isi:
+     KUOTA_TERISI      | 2
+     KUOTA_TOTAL       | 25
+     DONASI_TERKUMPUL  | 1500000
+     DONASI_TARGET     | 10000000
+
+   Kalau tab ini belum dibuat / baris DONASI belum diisi, fitur
+   terkait akan diam saja dan memakai nilai cadangan di atas --
+   website tetap aman berjalan.
+*/
+async function loadKuotaFromSheet() {
+  try {
+    const data = await fetchSheet('Kuota', ['Key', 'Value']);
+    if (!data.length) return;
+
+    data.forEach(row => {
+      const key = (row.Key || '').toString().trim();
+      const value = row.Value;
       if (key === 'KUOTA_TERISI' && value !== '') {
         KUOTA_TERISI = Number(value);
       }
@@ -682,11 +722,10 @@ async function loadPengaturanFromSheet() {
       }
     });
 
-    renderCountdown();
     renderKuota();
     renderDonasi();
   } catch (err) {
-    // Tab "Pengaturan" belum ada / gagal dimuat -> pakai nilai cadangan
+    // Tab "Kuota" belum ada / gagal dimuat -> pakai nilai cadangan
   }
 }
 
@@ -716,6 +755,7 @@ async function loadKalenderFromSheet() {
 if (!SHEET_ID.includes("PASTE_ID_GOOGLE_SHEET_DI_SINI")) {
   loadPengaturanFromSheet();
   loadKalenderFromSheet();
+  loadKuotaFromSheet();
 }
 
 
