@@ -956,3 +956,42 @@ if (ppdbAnnouncement) {
     announcementTimer = window.setTimeout(openAnnouncement, 2200);
   }
 }
+
+
+/* ============================================
+   15. TOMBOL "SEBARKAN KEBAIKAN" — PROGRAM SAHABAT DESA
+   ============================================
+   Sama seperti tombol "Bagikan" di poster PPDB (lihat ppdb.js):
+   pakai Web Share API kalau didukung HP/browser, fallback ke
+   salin link, fallback terakhir buka WhatsApp dengan pesan siap kirim.
+   Ditulis terpisah dari ppdb.js supaya tidak menyentuh kode PPDB
+   yang sudah berjalan.
+*/
+document.querySelectorAll('[data-share-desa]').forEach(button => {
+  button.addEventListener('click', async () => {
+    const shareUrl = new URL('index.html#sahabatDesa', window.location.href).href;
+    const shareData = {
+      title: "Sahabat Desa — Ma'had Shafwatul Qur'an",
+      text: "Yuk jadi Sahabat Desa — donasi untuk program pendidikan, kesehatan, dan pemberdayaan masyarakat desa sekitar Ma'had Shafwatul Qur'an.",
+      url: shareUrl
+    };
+    const status = button.closest('.donasi-sahabat-desa')?.querySelector('[data-share-status-desa]');
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if (err.name !== 'AbortError' && status) status.textContent = 'Tautan belum berhasil dibagikan.';
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      if (status) status.textContent = 'Tautan Sahabat Desa berhasil disalin.';
+    } catch (err) {
+      const text = encodeURIComponent(`${shareData.text} ${shareUrl}`);
+      window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener');
+    }
+  });
+});
